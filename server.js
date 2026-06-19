@@ -11,7 +11,8 @@ const server = http.createServer((req, res) => {
     
     const filePath = path.join(__dirname, reqPath);
     
-    if (!filePath.startsWith(__dirname)) {
+    const relative = path.relative(__dirname, filePath);
+    if (relative.startsWith('..') || path.isAbsolute(relative)) {
         res.writeHead(403, { 'Content-Type': 'text/plain' });
         res.end('Forbidden');
         return;
