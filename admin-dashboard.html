@@ -530,14 +530,14 @@
       const user = localStorage.getItem("nc_user");
       const token = localStorage.getItem("nc_session_token");
       if (!user || !token) {
-        window.location.href = "/admin-login.html";
+        window.location.href = "admin-login.html";
         return;
       }
       
       const sessionUser = JSON.parse(user);
       if (sessionUser.role !== 'admin') {
         alert("Access Denied: Administrative accounts only!");
-        window.location.href = "/admin-login.html";
+        window.location.href = "admin-login.html";
         return;
       }
       loggedAdmin = sessionUser;
@@ -549,7 +549,7 @@
       localStorage.setItem("nc_session_token", "");
       showToast("Logged out successfully.", "success");
       setTimeout(() => {
-        window.location.href = "/admin-login.html";
+        window.location.href = "admin-login.html";
       }, 1000);
     }
 
