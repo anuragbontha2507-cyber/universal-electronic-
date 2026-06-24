@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Universal Electronic</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #0F172A;
+      --primary-light: #1E293B;
+      --accent: #6366F1;
+      --accent-glow: #818CF8;
+      --accent-gradient: linear-gradient(135deg, #6366F1 0%, #EC4899 100%);
+      --gold: #F59E0B;
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F97316;
+      --surface: #F8FAFC;
+      --surface-card: #FFFFFF;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #F1F5F9;
+      --border: #E2E8F0;
+      --glass-border: #E2E8F0;
+      --glass-bg: #FFFFFF;
+      --glass-blur: none;
+      
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
+      --transition-fast: 0.2s ease-out;
+      --transition-normal: 0.3s ease-out;
+    }
+
+    [data-theme="dark"] {
+      --primary: #0B0F19;
+      --primary-light: #111827;
+      --surface: #0B0F19;
+      --surface-card: #1E293B;
+      --text-dark: #F9FAFB;
+      --text-muted: #9CA3AF;
+      --border: #334155;
+      --glass-border: #334155;
+      --glass-bg: #1E293B;
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.2), 0 4px 6px -2px rgba(0,0,0,0.15);
+    }
+
+    html {
+      background-color: var(--surface);
+      transition: background-color var(--transition-normal);
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      background-color: transparent;
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .liquid-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+      background: var(--surface);
+      transition: background var(--transition-normal);
+    }
+    
+    .login-container {
+      width: 100%;
+      max-width: 460px;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      cursor: pointer;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .login-logo span {
+      color: var(--accent);
+    }
+
+    .login-logo i {
+      color: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.9; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .login-card {
+      background-color: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 36px 30px;
+      box-shadow: var(--shadow-lg);
+      transition: all var(--transition-normal);
+    }
+
+    .login-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+
+    .login-subtitle {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper i:not(.pwd-toggle) {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px 12px 46px;
+      box-sizing: border-box;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dark);
+      font-size: 15px;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      background: var(--surface-card);
+    }
+
+    .pwd-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      transition: color var(--transition-fast);
+    }
+
+    .pwd-toggle:hover {
+      color: var(--accent);
+    }
+
+    .login-btn {
+      background: var(--accent-gradient);
+      color: white;
+      font-weight: 700;
+      padding: 13px;
+      border-radius: 12px;
+      width: 100%;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+      transition: all var(--transition-fast);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-btn:hover {
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text-dark);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+    
+    .btn-secondary:hover {
+      background: var(--border);
+      color: var(--text-dark);
+      transform: none;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .login-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color var(--transition-fast);
+    }
+
+    .login-footer a:hover {
+      color: var(--accent-glow);
+    }
+
+    /* Option Grid UI */
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--text-dark);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-bottom: 12px;
+    }
+    
+    .option-btn:hover {
+      border-color: var(--accent);
+      background: var(--surface);
+      transform: translateY(-2px);
+    }
+    
+    .option-btn i {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+      color: var(--accent);
+    }
+    
+    .divider-text {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      position: relative;
+    }
+    
+    .divider-text::before,
+    .divider-text::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: var(--border);
+    }
+    
+    .divider-text::before { left: 0; }
+    .divider-text::after { right: 0; }
+
+    /* OTP Inputs */
+    .otp-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin: 16px 0;
+    }
+    
+    .otp-input {
+      width: 100%;
+      height: 50px;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dark);
+      outline: none;
+      transition: all var(--transition-fast);
+    }
+    
+    .otp-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 5px;
+      display: none;
+    }
+
+    /* Error Toast */
+    .toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toast {
+      background: rgba(239, 68, 68, 0.95);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+      font-size: 14px;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .theme-toggle-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid var(--glass-border);
+      color: var(--text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all var(--transition-fast);
+    }
+    
+    [data-theme="dark"] .theme-toggle-btn {
+      background: rgba(17, 24, 39, 0.35);
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--accent);
+      color: white;
+      transform: rotate(15deg);
+    }
+
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 24px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color var(--transition-fast);
+    }
+
+    .back-home:hover {
+      color: var(--accent);
+    }
+    
+    /* Verification overlay modal */
+    .verification-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    
+    .verification-modal {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="liquid-bg"></div>
+
+  <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Theme">
+    <i class="fa-solid fa-moon"></i>
+  </button>
+
+  <div class="login-container">
+    <a href="/index.html" class="back-home">
+      <i class="fa-solid fa-arrow-left"></i> Back to Shop
+    </a>
+
+    <div class="login-logo" onclick="window.location.href='/index.html'">
+      <i class="fa-solid fa-bolt"></i> Universal<span>Electronic</span>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card" id="auth-card">
+      
+      <!-- 1. SIGN IN METHOD CHOICE VIEW -->
+      <div id="login-choice-view">
+        <h1 class="login-title">Customer Sign In</h1>
+        <p class="login-subtitle">Welcome back! Choose how you want to sign in.</p>
+        
+        <button class="option-btn" id="choice-gmail">
+          <i class="fa-solid fa-envelope"></i> Continue with Gmail
+        </button>
+        <button class="option-btn" id="choice-mobile">
+          <i class="fa-solid fa-phone"></i> Continue with Mobile
+        </button>
+        
+        <div class="login-footer">
+          Don't have an account? <a href="#" id="go-to-signup">Sign Up</a>
+        </div>
+      </div>
+
+      <!-- 2. GMAIL INPUT VIEW -->
+      <div id="gmail-email-view" style="display: none;">
+        <h1 class="login-title">Sign In with Gmail</h1>
+        <p class="login-subtitle">Please enter your verified @gmail.com address.</p>
+        
+        <form id="gmail-email-form">
+          <div class="form-group">
+            <label class="form-label" for="gmail-email">Gmail Address</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="text" id="gmail-email" class="form-input" placeholder="example@gmail.com">
+            </div>
+            <div class="error-msg" id="gmail-email-error"></div>
+          </div>
+          
+          <button type="submit" class="login-btn" id="btn-gmail-next">Next <i class="fa-solid fa-arrow-right"></i></button>
+          <button type="button" class="login-btn btn-secondary" style="margin-top: 8px;" onclick="switchView('login-choice-view')">Back</button>
+        </form>
+      </div>
+
+      <!-- 3. GMAIL PASSWORD VIEW -->
+      <div id="gmail-password-view" style="display: none;">
+        <h1 class="login-title">Enter Password</h1>
+        <p class="login-subtitle" id="gmail-pass-subtitle">Enter password for email</p>
+        
+        <form id="gmail-pass-form">
+          <div class="form-group">
+            <label class="form-label" for="gmail-password">Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="gmail-password" class="form-input" placeholder="••••••••">
+              <i class="fa-solid fa-eye pwd-toggle" id="toggle-pwd-login"></i>
+            </div>
+            <div class="error-msg" id="gmail-pass-error"></div>
+          </div>
+          
+          <button type="submit" class="login-btn">Sign In</button>
+          <button type="button" class="login-btn btn-secondary" style="margin-top: 8px;" onclick="switchView('gmail-email-view')">Back</button>
+        </form>
+      </div>
+
+      <!-- 4. MOBILE INPUT VIEW -->
+      <div id="mobile-input-view" style="display: none;">
+        <h1 class="login-title">Sign In with Mobile</h1>
+        <p class="login-subtitle">Enter your 10-digit mobile number for OTP confirmation.</p>
+        
+        <form id="mobile-input-form">
+          <div class="form-group">
+            <label class="form-label" for="mobile-phone">Mobile Number</label>
+            <div style="display: flex; gap: 8px;">
+              <span style="display: flex; align-items: center; justify-content: center; padding: 0 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; font-weight: 700; font-size: 14px; color: var(--text-dark);">🇮🇳 +91</span>
+              <div class="input-wrapper" style="flex: 1;">
+                <i class="fa-solid fa-phone" style="left: 14px;"></i>
+                <input type="text" id="mobile-phone" class="form-input" style="padding-left: 42px;" placeholder="9876543210" maxlength="10">
+              </div>
+            </div>
+            <div class="error-msg" id="mobile-phone-error"></div>
+          </div>
+          
+          <div id="recaptcha-container" style="display: none;"></div>
+          
+          <button type="submit" class="login-btn">Send OTP <i class="fa-solid fa-paper-plane"></i></button>
+          <button type="button" class="login-btn btn-secondary" style="margin-top: 8px;" onclick="switchView('login-choice-view')">Back</button>
+        </form>
+      </div>
+
+      <!-- 5. MOBILE OTP INPUT VIEW -->
+      <div id="mobile-otp-view" style="display: none;">
+        <h1 class="login-title">Verify OTP</h1>
+        <p class="login-subtitle" id="mobile-otp-subtitle">Enter the 6-digit OTP code.</p>
+        
+        <form id="mobile-otp-form">
+          <div class="otp-grid">
+            <input type="text" maxlength="1" class="otp-input" id="otp-0">
+            <input type="text" maxlength="1" class="otp-input" id="otp-1">
+            <input type="text" maxlength="1" class="otp-input" id="otp-2">
+            <input type="text" maxlength="1" class="otp-input" id="otp-3">
+            <input type="text" maxlength="1" class="otp-input" id="otp-4">
+            <input type="text" maxlength="1" class="otp-input" id="otp-5">
+          </div>
+          <div class="error-msg" id="mobile-otp-error" style="text-align: center; margin-bottom: 12px;"></div>
+          
+          <div style="text-align: center; margin: 12px 0; font-size: 13px; font-weight: 500; color: var(--text-muted);" id="otp-timer-container">
+            Resend OTP in <span id="otp-timer-countdown">01:00</span>
+          </div>
+          
+          <button type="submit" class="login-btn">Verify OTP <i class="fa-solid fa-shield-halved"></i></button>
+          <button type="button" class="login-btn btn-secondary" style="margin-top: 8px;" id="btn-otp-resend" disabled>Resend OTP</button>
+          <button type="button" class="login-btn btn-secondary" style="margin-top: 8px;" onclick="switchView('mobile-input-view')">Back</button>
+        </form>
+      </div>
+
+      <!-- 6. SIGN UP CHOICE VIEW -->
+      <div id="signup-choice-view" style="display: none;">
+        <h1 class="login-title">Create Account</h1>
+        <p class="login-subtitle">Register to begin shopping and earning rewards.</p>
+        
+        <button class="option-btn" id="choice-signup-gmail">
+          <i class="fa-solid fa-envelope"></i> Sign Up with Gmail
+        </button>
+        <button class="option-btn" id="choice-signup-mobile">
+          <i class="fa-solid fa-phone"></i> Sign Up with Mobile
+        </button>
+        
+        <div class="login-footer">
+          Already have an account? <a href="#" id="go-to-login">Sign In</a>
+        </div>
+      </div>
+
+      <!-- 7. GMAIL SIGN UP VIEW -->
+      <div id="signup-gmail-view" style="display: none;">
+        <h1 class="login-title">Sign Up with Gmail</h1>
+        <p class="login-subtitle">Register using a verified Gmail address.</p>
+        
+        <form id="signup-gmail-form">
+          <div class="form-group">
+            <label class="form-label" for="signup-name">Full Name</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="signup-name" class="form-input" required placeholder="John Doe">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="signup-email">Gmail Address</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="text" id="signup-email" class="form-input" required placeholder="example@gmail.com">
+            </div>
+            <div class="error-msg" id="signup-email-error"></div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="signup-password">Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="signup-password" class="form-input" required placeholder="••••••••">
+              <i class="fa-solid fa-eye pwd-toggle" id="toggle-pwd-signup"></i>
+            </div>
+            <div class="error-msg" id="signup-pass-error"></div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="signup-confirm-password">Confirm Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="signup-confirm-password" class="form-input" required placeholder="••••••••">
+            </div>
+            <div class="error-msg" id="signup-confirm-error"></div>
+          </div>
+          
+          <button type="submit" class="login-btn">Sign Up</button>
+          <button type="button" class="login-btn btn-secondary" style="margin-top: 8px;" onclick="switchView('signup-choice-view')">Back</button>
+        </form>
+      </div>
+
+      <!-- 8. MOBILE SIGN UP VIEW -->
+      <div id="signup-mobile-view" style="display: none;">
+        <h1 class="login-title">Sign Up with Mobile</h1>
+        <p class="login-subtitle">Enter your details and confirm using SMS OTP.</p>
+        
+        <form id="signup-mobile-form">
+          <div class="form-group">
+            <label class="form-label" for="signup-mobile-name">Full Name</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="signup-mobile-name" class="form-input" required placeholder="John Doe">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="signup-mobile-phone">Mobile Number</label>
+            <div style="display: flex; gap: 8px;">
+              <span style="display: flex; align-items: center; justify-content: center; padding: 0 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; font-weight: 700; font-size: 14px; color: var(--text-dark);">🇮🇳 +91</span>
+              <div class="input-wrapper" style="flex: 1;">
+                <i class="fa-solid fa-phone" style="left: 14px;"></i>
+                <input type="text" id="signup-mobile-phone" class="form-input" style="padding-left: 42px;" placeholder="9876543210" maxlength="10" required>
+              </div>
+            </div>
+            <div class="error-msg" id="signup-mobile-error"></div>
+          </div>
+          
+          <button type="submit" class="login-btn">Send OTP <i class="fa-solid fa-paper-plane"></i></button>
+          <button type="button" class="login-btn btn-secondary" style="margin-top: 8px;" onclick="switchView('signup-choice-view')">Back</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+  
+  <div id="verification-overlay-container"></div>
+
+  <script>
+    // SHA-256 Hashing Algorithm
+    function sha256(ascii) {
+      function rightRotate(value, amount) {
+        return (value >>> amount) | (value << (32 - amount));
+      }
+      var mathPow = Math.pow;
+      var maxWord = mathPow(2, 32);
+      var lengthProperty = 'length';
+      var i, j;
+      var result = '';
+      var words = [];
+      var asciiLength = ascii[lengthProperty];
+      var hash = sha256.h = sha256.h || [];
+      var k = sha256.k = sha256.k || [];
+      var primeCounter = k[lengthProperty];
+      var isPrime = {};
+      for (var candidate = 2; primeCounter < 64; candidate++) {
+        if (!isPrime[candidate]) {
+          for (i = 0; i < 313; i += candidate) {
+            isPrime[i] = candidate;
+          }
+          hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+          k[primeCounter++] = (mathPow(candidate, 1/3) * maxWord) | 0;
+        }
+      }
+      hash = hash.slice();
+      ascii += '\x80';
+      while (ascii[lengthProperty] % 64 - 56) ascii += '\x00';
+      for (i = 0; i < ascii[lengthProperty]; i++) {
+        j = ascii.charCodeAt(i);
+        if (j >> 8) return;
+        words[i >> 2] |= j << ((3 - i) % 4) * 8;
+      }
+      words[words[lengthProperty]] = ((asciiLength * 8) / maxWord) | 0;
+      words[words[lengthProperty]] = (asciiLength * 8) | 0;
+      var w = [];
+      for (i = 0; i < words[lengthProperty]; i += 16) {
+        var a = hash[0], b = hash[1], c = hash[2], d = hash[3], e = hash[4], f = hash[5], g = hash[6], h = hash[7];
+        for (j = 0; j < 64; j++) {
+          if (j < 16) w[j] = words[i + j];
+          else {
+            var s0 = rightRotate(w[j - 15], 7) ^ rightRotate(w[j - 15], 18) ^ (w[j - 15] >>> 3);
+            var s1 = rightRotate(w[j - 2], 17) ^ rightRotate(w[j - 2], 19) ^ (w[j - 2] >>> 10);
+            w[j] = (w[j - 16] + s0 + w[j - 7] + s1) | 0;
+          }
+          var temp1 = (h + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & f) ^ (~e & g)) + k[j] + w[j]) | 0;
+          var temp2 = ((rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
+          h = g;
+          g = f;
+          f = e;
+          e = (d + temp1) | 0;
+          d = c;
+          c = b;
+          b = a;
+          a = (temp1 + temp2) | 0;
+        }
+        hash[0] = (hash[0] + a) | 0;
+        hash[1] = (hash[1] + b) | 0;
+        hash[2] = (hash[2] + c) | 0;
+        hash[3] = (hash[3] + d) | 0;
+        hash[4] = (hash[4] + e) | 0;
+        hash[5] = (hash[5] + f) | 0;
+        hash[6] = (hash[6] + g) | 0;
+        hash[7] = (hash[7] + h) | 0;
+      }
+      for (i = 0; i < 8; i++) {
+        for (j = 3; j + 1; j--) {
+          var b = (hash[i] >> (j * 8)) & 255;
+          result += ((b < 16) ? '0' : '') + b.toString(16);
+        }
+      }
+      return result;
+    }
+
+    // Local Storage Helpers
+    const DB = {
+      get(key) {
+        const data = localStorage.getItem('nc_db_' + key);
+        return data ? JSON.parse(data) : [];
+      },
+      set(key, val) {
+        localStorage.setItem('nc_db_' + key, JSON.stringify(val));
+      }
+    };
+
+    // Database Seeder
+    function seedDB() {
+      if (!localStorage.getItem('nc_db_users') || JSON.parse(localStorage.getItem('nc_db_users')).length === 0) {
+        const customerSalt = 'cust_salt_123';
+        const adminSalt = 'admin_salt_456';
+        const initialUsers = [
+          {
+            email: 'customer@gmail.com',
+            passwordHash: sha256('Customer@123' + customerSalt),
+            salt: customerSalt,
+            role: 'customer',
+            name: 'John Customer',
+            phone: '9876543210',
+            altPhone: '9876543219',
+            gender: 'Male',
+            dob: '2000-06-18',
+            loyaltyPoints: 1200,
+            referralCode: 'NEX-CUST-777',
+            walletBalance: 5000,
+            walletHistory: [
+              { type: 'Credit', amount: 5000, desc: 'Initial Balance Promotion', date: new Date().toLocaleDateString() }
+            ],
+            avatar: '',
+            twoFactorEnabled: false,
+            twoFactorSecret: 'MOCK2FASECRET777',
+            emailVerified: true,
+            failedAttempts: 0,
+            lockUntil: null,
+            registeredAt: new Date().toLocaleDateString()
+          },
+          {
+            email: 'admin@nexcart.com',
+            passwordHash: sha256('Admin@123' + adminSalt),
+            salt: adminSalt,
+            role: 'admin',
+            name: 'System Administrator',
+            phone: '9999999999',
+            altPhone: '',
+            gender: 'Female',
+            dob: '1990-05-15',
+            loyaltyPoints: 0,
+            referralCode: 'NEX-ADMIN-000',
+            walletBalance: 0,
+            walletHistory: [],
+            avatar: '',
+            twoFactorEnabled: false,
+            twoFactorSecret: 'MOCK2FASECRET000',
+            emailVerified: true,
+            failedAttempts: 0,
+            lockUntil: null,
+            registeredAt: new Date().toLocaleDateString()
+          }
+        ];
+        DB.set('users', initialUsers);
+      }
+      if (!localStorage.getItem('nc_db_sessions')) {
+        DB.set('sessions', []);
+      }
+      if (!localStorage.getItem('nc_db_notifications')) {
+        DB.set('notifications', []);
+      }
+      if (!localStorage.getItem('nc_db_whitelist')) {
+        DB.set('whitelist', ['customer@gmail.com', 'admin@gmail.com']);
+      }
+    }
+
+    seedDB();
+
+    // Theme Management
+    function initTheme() {
+      const savedTheme = localStorage.getItem("nc_theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.querySelector("#theme-toggle i");
+      if (theme === "dark") {
+        icon.className = "fa-solid fa-sun";
+      } else {
+        icon.className = "fa-solid fa-moon";
+      }
+    }
+
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("nc_theme", newTheme);
+      updateThemeIcon(newTheme);
+    });
+
+    initTheme();
+
+    // Show Toast Notification
+    function showToast(message, type = 'error') {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.style.background = type === 'success' ? 'rgba(16, 185, 129, 0.95)' : 'rgba(239, 68, 68, 0.95)';
+      
+      const icon = document.createElement("i");
+      icon.className = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-xmark';
+      
+      const text = document.createElement("span");
+      text.innerHTML = message;
+
+      toast.appendChild(icon);
+      toast.appendChild(text);
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = "slideIn 0.3s reverse cubic-bezier(0.16, 1, 0.3, 1)";
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // View Switcher logic with fade/display
+    let currentViewId = 'login-choice-view';
+    function switchView(viewId) {
+      document.getElementById(currentViewId).style.display = 'none';
+      const nextView = document.getElementById(viewId);
+      nextView.style.display = 'block';
+      
+      // Reset errors when switching views
+      document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+      
+      currentViewId = viewId;
+    }
+
+    // Toggle base forms
+    document.getElementById("go-to-signup").addEventListener("click", (e) => {
+      e.preventDefault();
+      switchView('signup-choice-view');
+    });
+
+    document.getElementById("go-to-login").addEventListener("click", (e) => {
+      e.preventDefault();
+      switchView('login-choice-view');
+    });
+
+    // Password visibility toggle
+    function bindPasswordToggle(inputId, toggleId) {
+      const input = document.getElementById(inputId);
+      const toggle = document.getElementById(toggleId);
+      toggle.addEventListener("click", () => {
+        if (input.type === "password") {
+          input.type = "text";
+          toggle.className = "fa-solid fa-eye-slash pwd-toggle";
+        } else {
+          input.type = "password";
+          toggle.className = "fa-solid fa-eye pwd-toggle";
+        }
+      });
+    }
+
+    bindPasswordToggle("gmail-password", "toggle-pwd-login");
+    bindPasswordToggle("signup-password", "toggle-pwd-signup");
+
+    // Dynamic choice bindings
+    document.getElementById("choice-gmail").addEventListener("click", () => switchView('gmail-email-view'));
+    document.getElementById("choice-mobile").addEventListener("click", () => switchView('mobile-input-view'));
+    document.getElementById("choice-signup-gmail").addEventListener("click", () => switchView('signup-gmail-view'));
+    document.getElementById("choice-signup-mobile").addEventListener("click", () => switchView('signup-mobile-view'));
+
+    // GMAIL CLIENT FORMAT CHECK VALIDATOR
+    function validateGmailFormat(email) {
+      const trimmed = email.trim();
+      if (!trimmed) {
+        return { valid: false, message: "Please enter your Gmail address." };
+      }
+      if (/\s/.test(trimmed)) {
+        return { valid: false, message: "No spaces allowed in Gmail address." };
+      }
+      if ((trimmed.match(/@/g) || []).length !== 1) {
+        return { valid: false, message: "Gmail address format is invalid (must have exactly one @)." };
+      }
+      
+      const parts = trimmed.split('@');
+      const local = parts[0];
+      const domain = parts[1].toLowerCase();
+      
+      if (domain !== 'gmail.com') {
+        return { valid: false, message: "Only Gmail addresses (@gmail.com) are accepted." };
+      }
+      if (local.length < 6 || local.length > 30) {
+        return { valid: false, message: "Gmail address is too short (must be 6-30 characters)." };
+      }
+      if (!/^[a-zA-Z0-9._]+$/.test(local)) {
+        return { valid: false, message: "Gmail address contains invalid characters." };
+      }
+      if (local.startsWith('.') || local.endsWith('.')) {
+        return { valid: false, message: "Gmail address cannot start or end with a dot." };
+      }
+      if (local.includes('..')) {
+        return { valid: false, message: "Gmail address format is invalid (no consecutive dots)." };
+      }
+      return { valid: true };
+    }
+
+    // PHONE FORMAT CHECK VALIDATOR (India mobile numbers: starts 6,7,8,9, exactly 10 digits)
+    function validateMobileFormat(number) {
+      const cleaned = number.replace(/\s/g, "");
+      if (!cleaned) {
+        return { valid: false, message: "Please enter your mobile number." };
+      }
+      if (!/^\d+$/.test(cleaned)) {
+        return { valid: false, message: "Mobile number contains invalid characters (digits only)." };
+      }
+      if (cleaned.length !== 10) {
+        return { valid: false, message: "Please enter a valid 10-digit Indian mobile number." };
+      }
+      if (!/^[6-9]/.test(cleaned)) {
+        return { valid: false, message: "Invalid Indian mobile number (must start with 6, 7, 8, or 9)." };
+      }
+      return { valid: true };
+    }
+
+    // Password strength check (min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special)
+    function validatePasswordStrength(pass) {
+      if (pass.length < 8) {
+        return { valid: false, message: "Password must be at least 8 characters." };
+      }
+      if (!/[A-Z]/.test(pass)) {
+        return { valid: false, message: "Password must contain at least one uppercase letter." };
+      }
+      if (!/[a-z]/.test(pass)) {
+        return { valid: false, message: "Password must contain at least one lowercase letter." };
+      }
+      if (!/[0-9]/.test(pass)) {
+        return { valid: false, message: "Password must contain at least one digit." };
+      }
+      if (!/[!@#\$%\^&\*\(\)_\+\-\=\[\]\{\};':",\.\/<>\?\\\|]/.test(pass)) {
+        return { valid: false, message: "Password must contain at least one special symbol." };
+      }
+      return { valid: true };
+    }
+
+    // Simulated Firebase Authentication SDK wrapper
+    const FirebaseAuth = {
+      // Simulate fetchSignInMethodsForEmail API
+      async fetchSignInMethodsForEmail(email) {
+        await new Promise(r => setTimeout(r, 600));
+        const users = DB.get('users');
+        const user = users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+        return user ? ['password'] : [];
+      },
+      
+      // Simulate signInWithEmailAndPassword API, with lockout handling
+      async signInWithEmailAndPassword(email, password) {
+        await new Promise(r => setTimeout(r, 700));
+        const users = DB.get('users');
+        const idx = users.findIndex(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+        
+        if (idx === -1) {
+          throw { code: "auth/user-not-found" };
+        }
+        
+        const user = users[idx];
+        
+        // Check Lockout expiration
+        if (user.lockUntil && Date.now() < user.lockUntil) {
+          const remainingMins = Math.ceil((user.lockUntil - Date.now()) / 60000);
+          throw { code: "auth/too-many-requests", message: `Account temporarily locked. Please try again in ${remainingMins} minutes.` };
+        }
+        
+        const testHash = sha256(password + user.salt);
+        if (testHash !== user.passwordHash) {
+          // Increment failed attempts
+          user.failedAttempts = (user.failedAttempts || 0) + 1;
+          if (user.failedAttempts >= 5) {
+            user.lockUntil = Date.now() + 15 * 60 * 1000; // 15 mins lock
+          }
+          users[idx] = user;
+          DB.set('users', users);
+          
+          if (user.failedAttempts >= 5) {
+            throw { code: "auth/too-many-requests", message: "Too many failed attempts. Account temporarily locked." };
+          } else {
+            throw { code: "auth/wrong-password" };
+          }
+        }
+        
+        // Reset count on success
+        user.failedAttempts = 0;
+        user.lockUntil = null;
+        users[idx] = user;
+        DB.set('users', users);
+        
+        return { user };
+      },
+
+      // Simulate Recaptcha Verifier
+      RecaptchaVerifier: class {
+        constructor(containerId, options) {
+          this.container = document.getElementById(containerId);
+          this.options = options;
+        }
+        async verify() {
+          if (this.container) {
+            this.container.style.display = "block";
+            this.container.innerHTML = `
+              <div style="display:flex; align-items:center; gap:8px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:12px; font-size:13px; font-weight:600; width:fit-content; margin: 10px auto;">
+                <i class="fa-solid fa-spinner fa-spin" style="color:var(--accent);"></i> reCAPTCHA securing connection...
+              </div>`;
+          }
+          await new Promise(r => setTimeout(r, 1200));
+          if (this.container) {
+            this.container.innerHTML = `
+              <div style="display:flex; align-items:center; gap:8px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:12px; font-size:13px; font-weight:600; width:fit-content; margin: 10px auto; color:var(--success);">
+                <i class="fa-solid fa-circle-check"></i> Connection verified
+              </div>`;
+          }
+          if (this.options && this.options.callback) this.options.callback();
+        }
+      },
+
+      // Simulate signInWithPhoneNumber API
+      async signInWithPhoneNumber(phoneNumber, verifier) {
+        await verifier.verify();
+        
+        // Generate random 6 digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Simulate SMS sending by placing code in dynamic toast alert
+        setTimeout(() => {
+          showToast(`💬 SMS Gateway OTP: <strong style="font-size:15px; color:#F59E0B; margin-left:4px;">${otp}</strong>`, 'success');
+        }, 1500);
+        
+        return {
+          confirm: async (otpCode) => {
+            await new Promise(r => setTimeout(r, 600));
+            if (otpCode !== otp) {
+              throw { code: "auth/invalid-verification-code" };
+            }
+            
+            // Look up user by phone key in DB
+            const users = DB.get('users');
+            const cleanPhone = phoneNumber.replace("+91", "");
+            const user = users.find(u => u.phone === cleanPhone);
+            
+            return { user };
+          }
+        };
+      }
+    };
+
+    // Shared Redirect Helper after Successful Login
+    function completeSessionLogin(user) {
+      if (user.role === 'admin') {
+        showToast("Access Denied: Admin accounts must sign in using the Admin Console.", "error");
+        return;
+      }
+      const token = 'sess_' + Math.floor(100000 + Math.random() * 900000);
+      
+      const sessions = DB.get('sessions');
+      const newSession = {
+        id: token,
+        email: user.email || `phone_${user.phone}@mobile.nexcart.com`,
+        loginTime: new Date().toLocaleString(),
+        device: navigator.userAgent.substring(0, 60) || 'Unknown Browser',
+        ip: '192.168.1.' + Math.floor(10 + Math.random() * 200),
+        status: 'Active'
+      };
+      sessions.push(newSession);
+      DB.set('sessions', sessions);
+      
+      localStorage.setItem("nc_user", JSON.stringify(user));
+      localStorage.setItem("nc_session_token", token);
+      
+      showToast("Verification successful! Logging in...", "success");
+      
+      setTimeout(() => {
+        window.location.href = "/index.html";
+      }, 1000);
+    }
+
+    // Gmail Login Username submission (Next button)
+    let gmailLoginEmail = '';
+    document.getElementById("gmail-email-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById("gmail-email");
+      const errEl = document.getElementById("gmail-email-error");
+      const email = emailInput.value.trim();
+      
+      const validate = validateGmailFormat(email);
+      if (!validate.valid) {
+        errEl.textContent = validate.message;
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      
+      // Firebase Verification Check
+      document.getElementById("btn-gmail-next").innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+      try {
+        const methods = await FirebaseAuth.fetchSignInMethodsForEmail(email);
+        document.getElementById("btn-gmail-next").innerHTML = 'Next <i class="fa-solid fa-arrow-right"></i>';
+        
+        if (methods.length > 0) {
+          gmailLoginEmail = email;
+          document.getElementById("gmail-pass-subtitle").textContent = `Enter password for ${email}`;
+          switchView('gmail-password-view');
+        } else {
+          showToast("No account found with this Gmail. Please sign up first.");
+        }
+      } catch (err) {
+        document.getElementById("btn-gmail-next").innerHTML = 'Next <i class="fa-solid fa-arrow-right"></i>';
+        showToast("Invalid Gmail address. Please check and try again.");
+      }
+    });
+
+    // Gmail Login Password Submission
+    document.getElementById("gmail-pass-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const pass = document.getElementById("gmail-password").value;
+      const errEl = document.getElementById("gmail-pass-error");
+      
+      if (!pass) {
+        errEl.textContent = "Please enter your password.";
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      
+      try {
+        const res = await FirebaseAuth.signInWithEmailAndPassword(gmailLoginEmail, pass);
+        
+        // Gmail Verification Guard
+        if (res.user.emailVerified === false) {
+          const verifyLink = `${window.location.origin}${window.location.pathname}?verifyEmail=${encodeURIComponent(res.user.email)}`;
+          showToast("Please verify your Gmail address first.");
+          showVerificationOverlay(res.user.email, verifyLink);
+          return;
+        }
+        
+        // Role check & lock reset handled inside firebase mock
+        completeSessionLogin(res.user);
+      } catch (err) {
+        if (err.code === "auth/too-many-requests") {
+          showToast(err.message || "Too many attempts. Please wait before trying again.");
+        } else if (err.code === "auth/wrong-password") {
+          showToast("Invalid Gmail or password.");
+        } else {
+          showToast("Invalid Gmail or password.");
+        }
+      }
+    });
+
+    // Verification Overlay Helper
+    function showVerificationOverlay(email, link) {
+      const container = document.getElementById("verification-overlay-container");
+      container.innerHTML = `
+        <div class="verification-overlay">
+          <div class="verification-modal">
+            <h3 style="font-size:1.3rem; font-weight:700; margin-bottom:12px; color:var(--text-dark);"><i class="fa-solid fa-envelope-circle-check" style="color:var(--accent);"></i> Email Verification Required</h3>
+            <p style="font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">
+              A verification mail has been sent to <strong>${email}</strong>. Please click the button below to simulate clicking the email link.
+            </p>
+            <a href="${link}" class="login-btn" style="text-decoration:none; margin-bottom:12px;">Verify Email Now (Simulate Link)</a>
+            <button class="login-btn btn-secondary" onclick="document.getElementById('verification-overlay-container').innerHTML=''">Close</button>
+          </div>
+        </div>`;
+    }
+
+    // Mobile Login Send OTP submission
+    let confirmationResult = null;
+    let mobileLoginNumber = '';
+    document.getElementById("mobile-input-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const phoneInput = document.getElementById("mobile-phone");
+      const errEl = document.getElementById("mobile-phone-error");
+      const phoneVal = phoneInput.value.trim();
+      
+      const validate = validateMobileFormat(phoneVal);
+      if (!validate.valid) {
+        errEl.textContent = validate.message;
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      
+      // Check if account linked to this number exists
+      const users = DB.get('users');
+      const userExists = users.some(u => u.phone === phoneVal);
+      if (!userExists) {
+        showToast("No account linked to this number. Please sign up.");
+        return;
+      }
+      
+      mobileLoginNumber = phoneVal;
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const origText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending OTP...';
+      submitBtn.disabled = true;
+      
+      try {
+        const verifier = new FirebaseAuth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
+        confirmationResult = await FirebaseAuth.signInWithPhoneNumber("+91" + phoneVal, verifier);
+        
+        submitBtn.innerHTML = origText;
+        submitBtn.disabled = false;
+        
+        // Go to OTP view and start timer
+        document.getElementById("mobile-otp-subtitle").textContent = `Enter the 6-digit OTP sent to +91 ${phoneVal.substring(0,2)}XXXXXX${phoneVal.substring(8)}`;
+        switchView('mobile-otp-view');
+        startOTPTimer();
+      } catch (err) {
+        submitBtn.innerHTML = origText;
+        submitBtn.disabled = false;
+        showToast("Failed to send OTP. Check the number and try again.");
+      }
+    });
+
+    // OTP Inputs Auto jumping & Backspace handling
+    const otpInputs = document.querySelectorAll('.otp-input');
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (val.length === 1 && index < 5) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+
+    // Countdown Timer logic
+    let otpTimerInterval = null;
+    function startOTPTimer() {
+      if (otpTimerInterval) clearInterval(otpTimerInterval);
+      let duration = 60;
+      const timerEl = document.getElementById("otp-timer-countdown");
+      const resendBtn = document.getElementById("btn-otp-resend");
+      resendBtn.disabled = true;
+      
+      otpTimerInterval = setInterval(() => {
+        duration--;
+        const mins = Math.floor(duration / 60);
+        const secs = duration % 60;
+        timerEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        
+        if (duration <= 0) {
+          clearInterval(otpTimerInterval);
+          document.getElementById("otp-timer-container").innerHTML = "You can now request a new OTP.";
+          resendBtn.disabled = false;
+        }
+      }, 1000);
+    }
+    
+    // Resend OTP action
+    document.getElementById("btn-otp-resend").addEventListener("click", async () => {
+      document.getElementById("otp-timer-container").innerHTML = `Resend OTP in <span id="otp-timer-countdown">01:00</span>`;
+      startOTPTimer();
+      try {
+        const verifier = new FirebaseAuth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
+        confirmationResult = await FirebaseAuth.signInWithPhoneNumber("+91" + mobileLoginNumber, verifier);
+        showToast("OTP resent successfully!", "success");
+      } catch (err) {
+        showToast("Failed to resend OTP. Check connection.");
+      }
+    });
+
+    // Verify OTP Submission
+    document.getElementById("mobile-otp-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const otpCode = Array.from(otpInputs).map(input => input.value).join("");
+      const errEl = document.getElementById("mobile-otp-error");
+      
+      if (otpCode.length !== 6) {
+        errEl.textContent = "Please enter all 6 digits of the OTP code.";
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      
+      try {
+        const result = await confirmationResult.confirm(otpCode);
+        
+        if (result.user.isBlocked) {
+          showToast("Access Denied: Your account has been blocked by an administrator.");
+          return;
+        }
+        
+        completeSessionLogin(result.user);
+      } catch (err) {
+        showToast("Incorrect OTP. Please try again.");
+      }
+    });
+
+    // Gmail Signup submission
+    document.getElementById("signup-gmail-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("signup-name").value.trim();
+      const email = document.getElementById("signup-email").value.trim();
+      const pass = document.getElementById("signup-password").value;
+      const confirmPass = document.getElementById("signup-confirm-password").value;
+      
+      const emailErr = document.getElementById("signup-email-error");
+      const passErr = document.getElementById("signup-pass-error");
+      const confirmErr = document.getElementById("signup-confirm-error");
+      
+      emailErr.style.display = 'none';
+      passErr.style.display = 'none';
+      confirmErr.style.display = 'none';
+      
+      // 1. Validate Gmail format
+      const gmailCheck = validateGmailFormat(email);
+      if (!gmailCheck.valid) {
+        emailErr.textContent = gmailCheck.message;
+        emailErr.style.display = 'block';
+        return;
+      }
+      
+      // 2. Validate Whitelist constraint (if whitelisted is present)
+      const whitelist = DB.get('whitelist') || [];
+      // If whitelist exists and contains entries, we require it
+      if (whitelist.length > 0 && !whitelist.map(w => w.toLowerCase()).includes(email.toLowerCase())) {
+        showToast("This Gmail is not on the whitelist/approved list. Contact Administrator.");
+        return;
+      }
+      
+      // 3. Check for existing email in user database
+      const users = DB.get('users');
+      if (users.some(u => u.email && u.email.toLowerCase() === email.toLowerCase())) {
+        emailErr.textContent = "This email is already registered.";
+        emailErr.style.display = 'block';
+        return;
+      }
+      
+      // 4. Validate password strength
+      const pwdStrength = validatePasswordStrength(pass);
+      if (!pwdStrength.valid) {
+        passErr.textContent = pwdStrength.message;
+        passErr.style.display = 'block';
+        return;
+      }
+      
+      // 5. Match passwords
+      if (pass !== confirmPass) {
+        confirmErr.textContent = "Passwords do not match.";
+        confirmErr.style.display = 'block';
+        return;
+      }
+      
+      // Save user with emailVerified = false
+      const salt = 'salt_' + Math.floor(100000 + Math.random() * 900000);
+      const newUser = {
+        email: email,
+        passwordHash: sha256(pass + salt),
+        salt: salt,
+        role: 'customer',
+        name: name,
+        phone: '',
+        altPhone: '',
+        gender: 'Male',
+        dob: '',
+        loyaltyPoints: 100,
+        referralCode: 'NEX-' + Math.floor(100000 + Math.random() * 900000),
+        walletBalance: 0,
+        walletHistory: [],
+        avatar: '',
+        twoFactorEnabled: false,
+        twoFactorSecret: 'SECRET-' + Math.floor(100000 + Math.random() * 900000),
+        registeredAt: new Date().toLocaleDateString(),
+        emailVerified: false,
+        failedAttempts: 0,
+        lockUntil: null,
+        loyaltyHistory: [{ points: 100, reason: 'Registration Welcome Reward', date: new Date().toLocaleDateString() }]
+      };
+      
+      users.push(newUser);
+      DB.set('users', users);
+      
+      // Show simulated email verification trigger
+      const verifyLink = `${window.location.origin}${window.location.pathname}?verifyEmail=${encodeURIComponent(email)}`;
+      showVerificationOverlay(email, verifyLink);
+      
+      // Reset forms and switch view
+      document.getElementById("signup-gmail-form").reset();
+      switchView('login-choice-view');
+    });
+
+    // Mobile Signup Form submission (Send Registration OTP)
+    let signupPhoneConfirmation = null;
+    let signupMobileName = '';
+    let signupMobilePhone = '';
+    document.getElementById("signup-mobile-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("signup-mobile-name").value.trim();
+      const phoneInput = document.getElementById("signup-mobile-phone");
+      const errEl = document.getElementById("signup-mobile-error");
+      const phoneVal = phoneInput.value.trim();
+      
+      const phoneCheck = validateMobileFormat(phoneVal);
+      if (!phoneCheck.valid) {
+        errEl.textContent = phoneCheck.message;
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+      
+      // Verify phone not already registered
+      const users = DB.get('users');
+      if (users.some(u => u.phone === phoneVal)) {
+        errEl.textContent = "This mobile number is already registered.";
+        errEl.style.display = 'block';
+        return;
+      }
+      
+      signupMobileName = name;
+      signupMobilePhone = phoneVal;
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const origText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending OTP...';
+      submitBtn.disabled = true;
+      
+      try {
+        const verifier = new FirebaseAuth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
+        signupPhoneConfirmation = await FirebaseAuth.signInWithPhoneNumber("+91" + phoneVal, verifier);
+        
+        submitBtn.innerHTML = origText;
+        submitBtn.disabled = false;
+        
+        // We reuse the OTP code view but switch it for registration execution
+        // We set confirmationResult to our registration confirmation object
+        confirmationResult = signupPhoneConfirmation;
+        mobileLoginNumber = phoneVal;
+        
+        // We override the confirm handler temporarily on the form to do registration on success!
+        document.getElementById("mobile-otp-subtitle").textContent = `Enter the 6-digit registration OTP sent to +91 ${phoneVal}`;
+        switchView('mobile-otp-view');
+        startOTPTimer();
+        
+        // Adjust verify submit handler for registration
+        document.getElementById("mobile-otp-form").onsubmit = async (evt) => {
+          evt.preventDefault();
+          const otpCode = Array.from(otpInputs).map(inp => inp.value).join("");
+          if (otpCode.length !== 6) {
+            document.getElementById("mobile-otp-error").textContent = "Please enter all 6 digits.";
+            document.getElementById("mobile-otp-error").style.display = "block";
+            return;
+          }
+          
+          try {
+            await confirmationResult.confirm(otpCode);
+            
+            // Create user in local storage DB
+            const usersList = DB.get('users');
+            const cleanPhone = mobileLoginNumber;
+            
+            const newUser = {
+              email: `phone_${cleanPhone}@mobile.nexcart.com`,
+              passwordHash: '',
+              salt: '',
+              role: 'customer',
+              name: signupMobileName,
+              phone: cleanPhone,
+              altPhone: '',
+              gender: 'Male',
+              dob: '',
+              loyaltyPoints: 100,
+              referralCode: 'NEX-' + Math.floor(100000 + Math.random() * 900000),
+              walletBalance: 0,
+              walletHistory: [],
+              avatar: '',
+              twoFactorEnabled: false,
+              twoFactorSecret: 'SECRET-' + Math.floor(100000 + Math.random() * 900000),
+              registeredAt: new Date().toLocaleDateString(),
+              emailVerified: true,
+              failedAttempts: 0,
+              lockUntil: null,
+              loyaltyHistory: [{ points: 100, reason: 'Registration Welcome Reward', date: new Date().toLocaleDateString() }]
+            };
+            
+            usersList.push(newUser);
+            DB.set('users', usersList);
+            
+            // Clear override and log user in
+            document.getElementById("mobile-otp-form").onsubmit = null;
+            completeSessionLogin(newUser);
+          } catch (err) {
+            showToast("Incorrect OTP code. Please try again.");
+          }
+        };
+      } catch (err) {
+        submitBtn.innerHTML = origText;
+        submitBtn.disabled = false;
+        showToast("Failed to send OTP. Check phone connection.");
+      }
+    });
+
+    // Check for simulated email verification parameters on initial boot
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailToVerify = urlParams.get('verifyEmail');
+    if (emailToVerify) {
+      const users = DB.get('users');
+      const idx = users.findIndex(u => u.email && u.email.toLowerCase() === emailToVerify.toLowerCase());
+      if (idx !== -1) {
+        users[idx].emailVerified = true;
+        DB.set('users', users);
+        showToast("Gmail address verified successfully! You can now log in.", "success");
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  </script>
+</body>
+</html>

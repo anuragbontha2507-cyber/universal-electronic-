@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Universal Electronic</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #0F172A;
+      --primary-light: #1E293B;
+      --accent: #EC4899;
+      --accent-glow: #F472B6;
+      --accent-gradient: linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%);
+      --gold: #F59E0B;
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F97316;
+      --surface: #F8FAFC;
+      --surface-card: #FFFFFF;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #F1F5F9;
+      --border: #E2E8F0;
+      
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --transition-fast: 0.2s ease-out;
+      --transition-normal: 0.3s ease-out;
+    }
+
+    [data-theme="dark"] {
+      --primary: #1E293B;
+      --primary-light: #0F172A;
+      --surface: #0B0F19;
+      --surface-card: #1E293B;
+      --text-dark: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-light: #0F172A;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--surface);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* TOP UTILITY HEADER */
+    .top-header {
+      background-color: var(--primary);
+      color: white;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      background: var(--accent-gradient);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+    }
+
+    .user-profile-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .profile-info {
+      text-align: right;
+    }
+
+    .profile-name {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .profile-role {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* MAIN CONTAINER WORKSPACE */
+    .main-workspace {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 70px);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background-color: var(--primary-light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 12px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(236, 72, 153, 0.1);
+      color: var(--accent);
+    }
+
+    .nav-item.active {
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 0 12px;
+    }
+
+    /* WORKSPACE CONTENT PANEL */
+    .content-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 30px;
+      background-color: var(--surface);
+    }
+
+    /* CARDS */
+    .settings-card {
+      background-color: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .settings-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    /* FORM STYLING */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: var(--surface);
+      color: var(--text-dark);
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    /* BUTTONS */
+    .btn {
+      background-color: var(--accent);
+      color: white;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dark);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+    }
+
+    /* TABLES */
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .admin-table th,
+    .admin-table td {
+      padding: 12px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-table th {
+      background-color: var(--surface);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+    }
+
+    /* BAR CHART representation */
+    .admin-bar-chart {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 180px;
+      padding: 20px 0 10px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .admin-bar {
+      width: 48px;
+      background: var(--accent-gradient);
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding-bottom: 6px;
+      position: relative;
+    }
+
+    .admin-bar-value {
+      margin-bottom: auto;
+      padding-top: 6px;
+    }
+
+    .admin-bar-label {
+      position: absolute;
+      bottom: -22px;
+      color: var(--text-dark);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* TOAST ALERTS */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background-color: #1E293B;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 250px;
+      border-left: 4px solid var(--accent);
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .toast.success {
+      border-left-color: var(--success);
+    }
+
+    .toast.error {
+      border-left-color: var(--danger);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- TOP HEADER -->
+  <header class="top-header">
+    <div class="brand-group">
+      <div class="logo-badge">NEX</div>
+      <div class="brand-title">Universal Electronic Admin</div>
+    </div>
+    
+    <div class="user-profile-bar">
+      <div class="profile-info">
+        <div class="profile-name" id="admin-user-name">System Administrator</div>
+        <div class="profile-role">Store Manager</div>
+      </div>
+      <button onclick="logoutAdmin()" class="btn btn-secondary" style="padding: 6px 12px;"><i class="fa-solid fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <div class="main-workspace">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <ul class="nav-list">
+        <li><a class="nav-item active" onclick="switchPane('overview', this)"><i class="fa-solid fa-chart-line"></i> Dashboard Overview</a></li>
+        <li><a class="nav-item" onclick="switchPane('products', this)"><i class="fa-solid fa-box-open"></i> Products CRUD</a></li>
+        <li><a class="nav-item" onclick="switchPane('orders', this)"><i class="fa-solid fa-cart-flatbed"></i> Order Queue</a></li>
+        <li><a class="nav-item" onclick="switchPane('customers', this)"><i class="fa-solid fa-user-gear"></i> Customer Directory</a></li>
+        <li><a class="nav-item" onclick="switchPane('content', this)"><i class="fa-solid fa-sliders"></i> Content Customizer</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENT DISPLAY PANEL -->
+    <main class="content-panel" id="content-panel">
+      <!-- DYNAMIC CONTENT LOADED VIA JAVASCRIPT -->
+    </main>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Shared Database Access Driver
+    const DB = {
+      get(key, defaultVal = []) {
+        const data = localStorage.getItem('nc_db_' + key);
+        return data ? JSON.parse(data) : defaultVal;
+      },
+      set(key, val) {
+        localStorage.setItem('nc_db_' + key, JSON.stringify(val));
+      }
+    };
+
+    // Products Service namespace
+    const Products = {
+      create(productData) {
+        const list = DB.get('products');
+        const newId = 'p_' + Date.now();
+        const newProduct = {
+          id: newId,
+          name: productData.name || '',
+          brand: productData.brand || 'Generic',
+          category: productData.category || 'smartphones',
+          price: parseFloat(productData.price) || 0,
+          originalPrice: parseFloat(productData.originalPrice) || parseFloat(productData.price) || 0,
+          rating: 5.0,
+          reviews: 0,
+          inStock: (parseInt(productData.stockCount) || 0) > 0,
+          stockCount: parseInt(productData.stockCount) || 0,
+          badge: productData.badge || null,
+          deliveryDays: parseInt(productData.deliveryDays) || 3,
+          sponsored: !!productData.sponsored,
+          image: productData.image || '📦',
+          images: productData.images || (productData.image ? [productData.image] : []),
+          primaryImage: productData.primaryImage || productData.image || '',
+          lastUpdated: productData.lastUpdated || new Date().toISOString(),
+          features: { brand: productData.brand || 'Generic' }
+        };
+        
+        list.push(newProduct);
+        DB.set('products', list);
+
+        const inv = DB.get('inventory');
+        inv[newId] = newProduct.stockCount;
+        DB.set('inventory', inv);
+
+        return newProduct;
+      },
+
+      update(id, fields) {
+        const list = DB.get('products');
+        const idx = list.findIndex(p => p.id === id);
+        if (idx === -1) return null;
+
+        const updatedProduct = { 
+          ...list[idx], 
+          ...fields,
+          lastUpdated: new Date().toISOString()
+        };
+        if (fields.price !== undefined) updatedProduct.price = parseFloat(fields.price) || 0;
+        if (fields.originalPrice !== undefined) updatedProduct.originalPrice = parseFloat(fields.originalPrice) || 0;
+        if (fields.stockCount !== undefined) {
+          updatedProduct.stockCount = parseInt(fields.stockCount) || 0;
+          updatedProduct.inStock = updatedProduct.stockCount > 0;
+        }
+        if (fields.deliveryDays !== undefined) updatedProduct.deliveryDays = parseInt(fields.deliveryDays) || 3;
+
+        list[idx] = updatedProduct;
+        DB.set('products', list);
+
+        if (fields.stockCount !== undefined) {
+          const inv = DB.get('inventory');
+          inv[id] = updatedProduct.stockCount;
+          DB.set('inventory', inv);
+        }
+
+        return updatedProduct;
+      },
+
+      delete(id) {
+        const list = DB.get('products');
+        const idx = list.findIndex(p => p.id === id);
+        if (idx === -1) return false;
+
+        list.splice(idx, 1);
+        DB.set('products', list);
+
+        const inv = DB.get('inventory');
+        delete inv[id];
+        DB.set('inventory', inv);
+
+        return true;
+      }
+    };
+
+    // State Variables
+    let activeSection = 'overview';
+    let adminEditingProductId = null;
+    let loggedAdmin = null;
+    let adminUploadedImages = [];
+    let adminPrimaryImage = '';
+
+    // Authentication safeguard
+    function checkAuth() {
+      const user = localStorage.getItem("nc_user");
+      const token = localStorage.getItem("nc_session_token");
+      if (!user || !token) {
+        window.location.href = "/admin-login.html";
+        return;
+      }
+      
+      const sessionUser = JSON.parse(user);
+      if (sessionUser.role !== 'admin') {
+        alert("Access Denied: Administrative accounts only!");
+        window.location.href = "/admin-login.html";
+        return;
+      }
+      loggedAdmin = sessionUser;
+      document.getElementById("admin-user-name").textContent = sessionUser.name || sessionUser.email;
+    }
+
+    function logoutAdmin() {
+      localStorage.setItem("nc_user", "");
+      localStorage.setItem("nc_session_token", "");
+      showToast("Logged out successfully.", "success");
+      setTimeout(() => {
+        window.location.href = "/admin-login.html";
+      }, 1000);
+    }
+
+    // Toast Messages
+    function showToast(message, type = 'success') {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${message}`;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Helper functions
+    function escapeForAttr(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '&quot;')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r');
+    }
+
+    // Nav Switcher
+    function switchPane(section, menuEl) {
+      if (activeSection !== section) {
+        adminEditingProductId = null;
+        adminUploadedImages = [];
+        adminPrimaryImage = '';
+      }
+      activeSection = section;
+      
+      document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
+      if (menuEl) {
+        menuEl.classList.add("active");
+      } else {
+        const links = document.querySelectorAll(".nav-item");
+        links.forEach(l => {
+          if (l.getAttribute("onclick").includes(section)) l.classList.add("active");
+        });
+      }
+
+      renderCurrentSection();
+    }
+
+    // render dynamic subpanels
+    function renderCurrentSection() {
+      const panel = document.getElementById("content-panel");
+      
+      if (activeSection === 'overview') {
+        const allOrders = DB.get("orders") || [];
+        const totalRev = allOrders.reduce((sum, o) => o.step !== 0 ? sum + (o.price * o.qty) : sum, 0);
+        const lowStockAlerts = [];
+        const inv = DB.get("inventory") || {};
+        const prodList = DB.get("products") || [];
+
+        prodList.forEach(p => {
+          const stock = inv[p.id] !== undefined ? inv[p.id] : 0;
+          if (stock < 5) {
+            lowStockAlerts.push({ product: p, stock: stock });
+          }
+        });
+
+        let stockRows = '';
+        if (lowStockAlerts.length === 0) {
+          stockRows = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:12px;">All products are well stocked.</td></tr>';
+        } else {
+          lowStockAlerts.forEach(a => {
+            stockRows += `
+              <tr style="border-bottom:1px solid var(--border);">
+                <td>${a.product.name}</td>
+                <td style="font-weight:700; color:var(--danger);">${a.stock} left</td>
+                <td>
+                  <div style="display:flex; gap:6px;">
+                    <input type="number" id="stock-val-${escapeForAttr(a.product.id)}" value="20" style="width:60px; font-size:12px; padding:4px; border:1px solid var(--border); border-radius:4px;">
+                    <button onclick="adminUpdateStock('${escapeForAttr(a.product.id)}', 'stock-val-${escapeForAttr(a.product.id)}')" class="btn" style="padding:4px 8px; font-size:11px;">Restock</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        let orderRows = '';
+        if (allOrders.length === 0) {
+          orderRows = '<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:12px;">No orders available.</td></tr>';
+        } else {
+          allOrders.slice(-5).reverse().forEach(o => {
+            orderRows += `
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="font-weight:600;">${o.id}</td>
+                <td>${o.userEmail}</td>
+                <td>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <select id="adm-ord-step-${escapeForAttr(o.id)}" style="font-size:12px; padding:4px 6px; border:1px solid var(--border); border-radius:4px; background:var(--surface);">
+                      <option value="0" ${o.step === 0 ? 'selected' : ''}>Cancelled</option>
+                      <option value="1" ${o.step === 1 ? 'selected' : ''}>Processing</option>
+                      <option value="2" ${o.step === 2 ? 'selected' : ''}>Order Placed</option>
+                      <option value="3" ${o.step === 3 ? 'selected' : ''}>Confirmed</option>
+                      <option value="4" ${o.step === 4 ? 'selected' : ''}>Shipped</option>
+                      <option value="5" ${o.step === 5 ? 'selected' : ''}>Out for Delivery</option>
+                      <option value="6" ${o.step === 6 ? 'selected' : ''}>Delivered</option>
+                    </select>
+                    <button onclick="adminChangeOrderStatus('${escapeForAttr(o.id)}', document.getElementById('adm-ord-step-${escapeForAttr(o.id)}').value)" class="btn" style="padding:4px 8px; font-size:11px;">Update</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        panel.innerHTML = `
+          <div class="settings-card">
+            <h3 class="settings-card-title">Console Analytics Overview</h3>
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:24px;">
+              <div style="background:var(--surface); border:1px solid var(--border); padding:16px; border-radius:8px;">
+                <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Gross Revenue</div>
+                <div style="font-size:24px; font-weight:800; color:var(--success); margin-top:4px;">₹${totalRev.toLocaleString()}</div>
+              </div>
+              <div style="background:var(--surface); border:1px solid var(--border); padding:16px; border-radius:8px;">
+                <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Total Orders</div>
+                <div style="font-size:24px; font-weight:800; color:var(--text-dark); margin-top:4px;">${allOrders.length}</div>
+              </div>
+              <div style="background:var(--surface); border:1px solid var(--border); padding:16px; border-radius:8px;">
+                <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Stock Warnings</div>
+                <div style="font-size:24px; font-weight:800; color:var(--danger); margin-top:4px;">${lowStockAlerts.length} items</div>
+              </div>
+            </div>
+
+            <h4 style="font-size:13px; font-weight:700; color:var(--text-dark); margin-bottom:12px;">Sales Category Allocations</h4>
+            <div class="admin-bar-chart">
+              <div class="admin-bar" style="height:120px;">
+                <span class="admin-bar-value">60%</span>
+                <span class="admin-bar-label">Phones</span>
+              </div>
+              <div class="admin-bar" style="height:70px;">
+                <span class="admin-bar-value">35%</span>
+                <span class="admin-bar-label">Laptops</span>
+              </div>
+              <div class="admin-bar" style="height:150px;">
+                <span class="admin-bar-value">75%</span>
+                <span class="admin-bar-label">Audio</span>
+              </div>
+              <div class="admin-bar" style="height:40px;">
+                <span class="admin-bar-value">20%</span>
+                <span class="admin-bar-label">TVs</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+            <div class="settings-card">
+              <h3 class="settings-card-title">Low Stock Alert Dashboard</h3>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Stock</th>
+                    <th>Restock</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stockRows}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="settings-card">
+              <h3 class="settings-card-title">Recent Customer Orders</h3>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Status Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${orderRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } else if (activeSection === 'products') {
+        const list = DB.get("products") || [];
+        const inv = DB.get("inventory") || {};
+        
+        let prodRows = '';
+        list.forEach(p => {
+          const stock = inv[p.id] !== undefined ? inv[p.id] : (p.stockCount || 0);
+          const imgHtml = (p.image && (p.image.startsWith('http') || p.image.startsWith('/'))) 
+            ? `<img src="${p.image}" style="width:24px; height:24px; object-fit:cover; border-radius:4px; display:block; margin:0 auto;">`
+            : (p.image || '📦');
+          prodRows += `
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="font-size:16px; text-align:center; vertical-align:middle;">${imgHtml}</td>
+              <td style="font-weight:600;">${p.name}</td>
+              <td style="text-transform:capitalize;">${p.category}</td>
+              <td style="font-weight:600;">₹${p.price.toLocaleString()}</td>
+              <td style="font-weight:600; color:${stock < 5 ? 'var(--danger)' : 'var(--text-dark)'}">${stock} units</td>
+              <td>
+                <button onclick="adminEditProduct('${escapeForAttr(p.id)}')" class="btn" style="padding:4px 8px; font-size:11px; margin-right:4px;"><i class="fa-solid fa-edit"></i> Edit</button>
+                <button onclick="adminDeleteProduct('${escapeForAttr(p.id)}')" class="btn btn-danger" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-trash"></i> Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+
+        const isEditing = !!adminEditingProductId;
+        const ep = isEditing ? list.find(p => p.id === adminEditingProductId) : null;
+
+        panel.innerHTML = `
+          <div class="settings-card" id="prod-form-container">
+            <h3 class="settings-card-title" id="prod-form-title">${isEditing ? 'Modify Existing Product' : 'Add New E-Store Product'}</h3>
+            <form id="prod-form" onsubmit="adminSaveProduct(event);" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div class="form-group" style="grid-column: span 2;">
+                <label for="prod-name">Product Name *</label>
+                <input type="text" id="prod-name" value="${ep ? escapeForAttr(ep.name) : ''}" required placeholder="e.g. Dell XPS 13 Core Ultra">
+              </div>
+              <div class="form-group">
+                <label for="prod-brand">Brand</label>
+                <input type="text" id="prod-brand" value="${ep ? escapeForAttr(ep.brand || '') : ''}" placeholder="e.g. Dell">
+              </div>
+              <div class="form-group">
+                <label for="prod-category">Catalog Category</label>
+                <select id="prod-category">
+                  <option value="smartphones" ${(ep && ep.category === 'smartphones') ? 'selected' : ''}>Smartphones</option>
+                  <option value="laptops" ${(ep && ep.category === 'laptops') ? 'selected' : ''}>Laptops</option>
+                  <option value="audio" ${(ep && ep.category === 'audio') ? 'selected' : ''}>Audio & Speakers</option>
+                  <option value="monitors" ${(ep && ep.category === 'monitors') ? 'selected' : ''}>Monitors</option>
+                  <option value="cameras" ${(ep && ep.category === 'cameras') ? 'selected' : ''}>Cameras</option>
+                  <option value="gaming" ${(ep && ep.category === 'gaming') ? 'selected' : ''}>Gaming Gear</option>
+                  <option value="wearables" ${(ep && ep.category === 'wearables') ? 'selected' : ''}>Wearables & Watches</option>
+                  <option value="tvs" ${(ep && ep.category === 'tvs') ? 'selected' : ''}>Televisions</option>
+                  <option value="printers" ${(ep && ep.category === 'printers') ? 'selected' : ''}>Printers</option>
+                  <option value="keyboards" ${(ep && ep.category === 'keyboards') ? 'selected' : ''}>Keyboards & Mouse</option>
+                  <option value="powerbanks" ${(ep && ep.category === 'powerbanks') ? 'selected' : ''}>Powerbanks</option>
+                  <option value="storage" ${(ep && ep.category === 'storage') ? 'selected' : ''}>Storage & Hard drives</option>
+                  <option value="accessories" ${(ep && ep.category === 'accessories') ? 'selected' : ''}>Accessories</option>
+                  <option value="networking" ${(ep && ep.category === 'networking') ? 'selected' : ''}>Networking & WiFi</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="prod-price">Sale Price (₹) *</label>
+                <input type="number" id="prod-price" value="${ep ? ep.price : ''}" required min="1" placeholder="e.g. 109999">
+              </div>
+              <div class="form-group">
+                <label for="prod-original-price">original Price / MRP (₹)</label>
+                <input type="number" id="prod-original-price" value="${ep ? (ep.originalPrice || ep.price) : ''}" min="1" placeholder="e.g. 119999">
+              </div>
+              <div class="form-group">
+                <label for="prod-stock">Initial Stock Quantity *</label>
+                <input type="number" id="prod-stock" value="${ep ? (ep.stockCount !== undefined ? ep.stockCount : 10) : ''}" required min="0" placeholder="e.g. 20">
+              </div>
+              <div class="form-group">
+                <label for="prod-delivery">Shipping ETA Days</label>
+                <input type="number" id="prod-delivery" value="${ep ? (ep.deliveryDays || 3) : '3'}" min="1" max="10">
+              </div>
+              <div class="form-group">
+                <label for="prod-badge">Product Badge</label>
+                <select id="prod-badge">
+                  <option value="" ${(ep && !ep.badge) ? 'selected' : ''}>None</option>
+                  <option value="BESTSELLER" ${(ep && ep.badge === 'BESTSELLER') ? 'selected' : ''}>Bestseller</option>
+                  <option value="SALE" ${(ep && ep.badge === 'SALE') ? 'selected' : ''}>Sale</option>
+                  <option value="NEW" ${(ep && ep.badge === 'NEW') ? 'selected' : ''}>New</option>
+                </select>
+              </div>
+              <div class="form-group" style="grid-column: span 2; border: 1px solid var(--border); padding: 16px; border-radius: 8px; background: var(--surface);">
+                <label style="margin-bottom: 8px; font-weight: 700; font-size: 13px;">Product Image URLs *</label>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                  <input type="url" id="prod-image-url" placeholder="Paste image URL (e.g. https://images.unsplash.com/photo-...)" style="flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background-color: var(--surface-card); color: var(--text-dark);">
+                  <button type="button" class="btn" onclick="adminAddImageUrl()" style="white-space: nowrap;"><i class="fa-solid fa-plus"></i> Add Image</button>
+                </div>
+                <div id="prod-images-preview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;">
+                  <!-- Dynamically populated thumbnail cards -->
+                </div>
+              </div>
+              <div class="form-group" style="grid-column: span 2; display:flex; align-items:center; gap:10px; margin-top:8px;">
+                <input type="checkbox" id="prod-sponsored" ${(ep && ep.sponsored) ? 'checked' : ''} style="width:18px; height:18px; cursor:pointer;">
+                <label for="prod-sponsored" style="margin-bottom:0; cursor:pointer;">Mark as Sponsored (Displays featured badge)</label>
+              </div>
+              <div style="grid-column: span 2; display:flex; gap:12px; margin-top:8px;">
+                <button type="submit" class="btn"><i class="fa-solid fa-save"></i> Save Product</button>
+                ${isEditing ? `<button type="button" onclick="adminCancelEditProduct()" class="btn btn-secondary">Cancel</button>` : ''}
+              </div>
+            </form>
+          </div>
+
+          <div class="settings-card">
+            <h3 class="settings-card-title">Manage Product Inventory</h3>
+            <div style="max-height:450px; overflow-y:auto; border:1px solid var(--border); border-radius:8px;">
+              <table class="admin-table">
+                <thead>
+                  <tr style="position:sticky; top:0; z-index:1;">
+                    <th style="width:40px; text-align:center;">Icon</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${prodRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+        renderUploadedImages();
+      } else if (activeSection === 'orders') {
+        const allOrders = DB.get("orders") || [];
+        
+        let orderRows = '';
+        if (allOrders.length === 0) {
+          orderRows = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:20px;">No transaction orders logged.</td></tr>';
+        } else {
+          allOrders.slice().reverse().forEach(o => {
+            const stepDesc = ["Cancelled", "Processing", "Order Placed", "Confirmed", "Shipped", "Out for Delivery", "Delivered"][o.step] || "Unknown";
+            orderRows += `
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="font-weight:700;">${o.id}</td>
+                <td>${o.userEmail}</td>
+                <td>${o.placed || 'N/A'}</td>
+                <td style="font-weight:600;">₹${(o.price * o.qty).toLocaleString()}</td>
+                <td><span class="logo-badge" style="font-size:11px; background:${o.step === 0 ? 'var(--danger)' : o.step === 6 ? 'var(--success)' : 'var(--warning)'}">${stepDesc}</span></td>
+                <td>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <select id="pane-ord-step-${escapeForAttr(o.id)}" style="font-size:12px; padding:4px 6px; border:1px solid var(--border); border-radius:4px; background:var(--surface);">
+                      <option value="0" ${o.step === 0 ? 'selected' : ''}>Cancelled</option>
+                      <option value="1" ${o.step === 1 ? 'selected' : ''}>Processing</option>
+                      <option value="2" ${o.step === 2 ? 'selected' : ''}>Order Placed</option>
+                      <option value="3" ${o.step === 3 ? 'selected' : ''}>Confirmed</option>
+                      <option value="4" ${o.step === 4 ? 'selected' : ''}>Shipped</option>
+                      <option value="5" ${o.step === 5 ? 'selected' : ''}>Out for Delivery</option>
+                      <option value="6" ${o.step === 6 ? 'selected' : ''}>Delivered</option>
+                    </select>
+                    <button onclick="adminChangeOrderStatus('${escapeForAttr(o.id)}', document.getElementById('pane-ord-step-${escapeForAttr(o.id)}').value)" class="btn" style="padding:4px 8px; font-size:11px;">Update</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        panel.innerHTML = `
+          <div class="settings-card">
+            <h3 class="settings-card-title">Manage Customer Order Queue</h3>
+            <div style="max-height:600px; overflow-y:auto; border:1px solid var(--border); border-radius:8px;">
+              <table class="admin-table">
+                <thead>
+                  <tr style="position:sticky; top:0; z-index:1;">
+                    <th>Order ID</th>
+                    <th>User</th>
+                    <th>Placed Date</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Action Toggle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${orderRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } else if (activeSection === 'customers') {
+        const users = DB.get("users") || [];
+        const whitelist = DB.get("whitelist") || [];
+        
+        let userRows = '';
+        users.forEach(u => {
+          const isBlocked = !!u.isBlocked;
+          const isSystemAdmin = u.email.toLowerCase() === 'admin@nexcart.com';
+          const emailStr = u.email || '';
+          
+          // Format Mock Phone email strings back to phone numbers nicely
+          let displayEmailOrPhone = '';
+          if (emailStr.startsWith("phone_")) {
+            const rawPhone = emailStr.replace("phone_", "").split("@")[0];
+            displayEmailOrPhone = `📱 +91 ${rawPhone}`;
+          } else if (u.phone && !u.email) {
+            displayEmailOrPhone = `📱 +91 ${u.phone}`;
+          } else {
+            displayEmailOrPhone = `📧 ${u.email}`;
+          }
+          
+          // Check whitelist status
+          const isWhitelisted = whitelist.map(w => w.toLowerCase()).includes(emailStr.toLowerCase());
+          const whitelistBadge = isWhitelisted ? `<span class="logo-badge" style="background:var(--success); font-size:10px; margin-left:4px; padding:2px 6px;">Whitelisted</span>` : '';
+          
+          // Verification status badge rendering
+          const verState = adminVerifiedUsers[emailStr] || '';
+          let verBadge = '';
+          if (verState === 'verified') {
+            verBadge = `<span style="font-weight:700; color:var(--success);"><i class="fa-solid fa-circle-check"></i> Verified</span>`;
+          } else if (verState === 'invalid') {
+            verBadge = `<span style="font-weight:700; color:var(--danger);"><i class="fa-solid fa-circle-xmark"></i> Invalid Format</span>`;
+          } else if (verState === 'not_found') {
+            verBadge = `<span style="font-weight:700; color:var(--warning);"><i class="fa-solid fa-circle-exclamation"></i> Not Found</span>`;
+          } else {
+            verBadge = `<span style="color:var(--text-muted); font-size:11px;">Unverified</span>`;
+          }
+          
+          userRows += `
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="font-weight:600;">${u.name || 'No Name'}</td>
+              <td>${displayEmailOrPhone} ${whitelistBadge}</td>
+              <td style="text-transform:uppercase; font-size:11px; font-weight:700; color:${u.role === 'admin' ? 'var(--accent)' : 'var(--text-muted)'}">${u.role}</td>
+              <td>${u.loyaltyPoints || 0} pts</td>
+              <td>${u.registeredAt || 'N/A'}</td>
+              <td>
+                <span style="font-weight:700; color:${isBlocked ? 'var(--danger)' : 'var(--success)'};">${isBlocked ? 'Blocked' : 'Active'}</span>
+              </td>
+              <td>${verBadge}</td>
+              <td>
+                <button onclick="adminVerifyUserAuthStatus('${escapeForAttr(emailStr)}')" class="btn" style="padding:4px 8px; font-size:11px; margin-right:4px; background:var(--primary-light); color:white;"><i class="fa-solid fa-user-check"></i> Verify</button>
+                ${isSystemAdmin ? '-' : `
+                  <button onclick="adminToggleBlockUser('${escapeForAttr(emailStr)}')" class="btn ${isBlocked ? 'btn-success' : ''}" style="padding:4px 8px; font-size:11px; margin-right:4px;">
+                    ${isBlocked ? '<i class="fa-solid fa-unlock"></i> Unblock' : '<i class="fa-solid fa-user-slash"></i> Block'}
+                  </button>
+                  <button onclick="adminRemoveUser('${escapeForAttr(emailStr)}')" class="btn btn-danger" style="padding:4px 8px; font-size:11px;">
+                    <i class="fa-solid fa-user-minus"></i> Delete
+                  </button>
+                `}
+              </td>
+            </tr>
+          `;
+        });
+
+        // Whitelist list items rendering
+        let whitelistRows = '';
+        if (whitelist.length === 0) {
+          whitelistRows = `<tr><td colspan="2" style="text-align:center; color:var(--text-muted); padding:10px;">No whitelisted emails.</td></tr>`;
+        } else {
+          whitelist.forEach(w => {
+            whitelistRows += `
+              <tr style="border-bottom:1px solid var(--border);">
+                <td>${w}</td>
+                <td>
+                  <button onclick="adminRemoveWhitelist('${escapeForAttr(w)}')" class="btn btn-danger" style="padding:2px 6px; font-size:10px;"><i class="fa-solid fa-trash"></i> Remove</button>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        panel.innerHTML = `
+          <div class="settings-card">
+            <h3 class="settings-card-title">Manage Approved Gmail Whitelist</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Only whitelisted Gmail addresses can complete customer registration.</p>
+            <form onsubmit="adminAddWhitelist(event);" style="display: flex; gap: 8px; max-width: 500px; margin-bottom:16px;">
+              <input type="text" id="whitelist-email-input" placeholder="Enter Gmail (e.g. approved@gmail.com)" required style="flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background-color: var(--surface); color: var(--text-dark);">
+              <button type="submit" class="btn" style="white-space: nowrap;"><i class="fa-solid fa-plus"></i> Whitelist Gmail</button>
+            </form>
+            
+            <div style="max-height:200px; overflow-y:auto; border:1px solid var(--border); border-radius:8px; max-width:500px;">
+              <table class="admin-table">
+                <thead>
+                  <tr style="position:sticky; top:0; z-index:1;">
+                    <th>Whitelisted Email</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${whitelistRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3 class="settings-card-title">Registered Storefront Customers Directory</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Manage customer logins and verify authentication credentials live.</p>
+            <div style="max-height:450px; overflow-y:auto; border:1px solid var(--border); border-radius:8px;">
+              <table class="admin-table">
+                <thead>
+                  <tr style="position:sticky; top:0; z-index:1;">
+                    <th>Name</th>
+                    <th>Gmail / Mobile</th>
+                    <th>Role</th>
+                    <th>Loyalty Points</th>
+                    <th>Join Date</th>
+                    <th>Status</th>
+                    <th>Auth Status</th>
+                    <th>Administrative Controls</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${userRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      } else if (activeSection === 'content') {
+        const promoText = DB.get("promo_text", "🚚 Free delivery on orders above ₹999");
+        let banners = DB.get("banners") || [];
+        if (banners.length === 0) {
+          banners = [
+            { class: "slide-1", title: "Up to 40% off on Flagship Phones", sub: "Limited time — Shop Samsung, Apple, OnePlus, Google", btnText: "Shop Now →", emoji: "📱", category: "smartphones" },
+            { class: "slide-2", title: "Premium Laptops. Unmatched Performance.", sub: "Dell XPS, Lenovo ThinkPad, MacBook M3 on sale", btnText: "Explore Laptops →", emoji: "💻", category: "laptops" },
+            { class: "slide-3", title: "Gaming Gear That Wins", sub: "High-spec Monitors, Controllers, and Headsets", btnText: "Shop Gaming →", emoji: "🎮", category: "gaming" }
+          ];
+        }
+
+        let slidesHtml = '';
+        banners.forEach((b, i) => {
+          const num = i + 1;
+          slidesHtml += `
+            <div style="border:1px solid var(--border); border-radius:8px; padding:16px; margin-bottom:16px; background:var(--surface);">
+              <h4 style="font-size:13px; font-weight:700; color:var(--accent); text-transform:uppercase; margin-bottom:12px;"><i class="fa-solid fa-image"></i> Slideshow Frame #${num}</h4>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div class="form-group" style="grid-column: span 2;">
+                  <label for="slide-${num}-title">Header Slide Title</label>
+                  <input type="text" id="slide-${num}-title" value="${escapeForAttr(b.title)}" required>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                  <label for="slide-${num}-sub">Header Subtitle Text</label>
+                  <input type="text" id="slide-${num}-sub" value="${escapeForAttr(b.sub)}" required>
+                </div>
+                <div class="form-group">
+                  <label for="slide-${num}-btn">Action Button Label</label>
+                  <input type="text" id="slide-${num}-btn" value="${escapeForAttr(b.btnText || 'Shop Now →')}">
+                </div>
+                <div class="form-group">
+                  <label for="slide-${num}-emoji">Graphic Icon (Emoji)</label>
+                  <input type="text" id="slide-${num}-emoji" value="${escapeForAttr(b.emoji)}" required>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                  <label for="slide-${num}-cat">Link Target Category</label>
+                  <select id="slide-${num}-cat">
+                    <option value="smartphones" ${b.category === 'smartphones' ? 'selected' : ''}>Smartphones</option>
+                    <option value="laptops" ${b.category === 'laptops' ? 'selected' : ''}>Laptops</option>
+                    <option value="audio" ${b.category === 'audio' ? 'selected' : ''}>Audio & Speakers</option>
+                    <option value="monitors" ${b.category === 'monitors' ? 'selected' : ''}>Monitors</option>
+                    <option value="cameras" ${b.category === 'cameras' ? 'selected' : ''}>Cameras</option>
+                    <option value="gaming" ${b.category === 'gaming' ? 'selected' : ''}>Gaming Gear</option>
+                    <option value="wearables" ${b.category === 'wearables' ? 'selected' : ''}>Wearables & Watches</option>
+                    <option value="tvs" ${b.category === 'tvs' ? 'selected' : ''}>Televisions</option>
+                    <option value="printers" ${b.category === 'printers' ? 'selected' : ''}>Printers</option>
+                    <option value="keyboards" ${b.category === 'keyboards' ? 'selected' : ''}>Keyboards & Mouse</option>
+                    <option value="powerbanks" ${b.category === 'powerbanks' ? 'selected' : ''}>Powerbanks</option>
+                    <option value="storage" ${b.category === 'storage' ? 'selected' : ''}>Storage & Hard drives</option>
+                    <option value="accessories" ${b.category === 'accessories' ? 'selected' : ''}>Accessories</option>
+                    <option value="networking" ${b.category === 'networking' ? 'selected' : ''}>Networking & WiFi</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        panel.innerHTML = `
+          <div class="settings-card">
+            <h3 class="settings-card-title">Storefront Content customization</h3>
+            <form onsubmit="adminSaveContentControls(event);">
+              <div class="form-group" style="margin-bottom:24px;">
+                <label for="content-promo-text">Global Header Announcement Banner Bar Text</label>
+                <input type="text" id="content-promo-text" value="${escapeForAttr(promoText)}" required>
+                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Appeared on top of header navigation frames on the client storefront page.</p>
+              </div>
+
+              <h4 style="font-size:14px; font-weight:700; color:var(--text-dark); margin-bottom:12px;">Dynamic Homepage Slideshow Configurator</h4>
+              <div>
+                ${slidesHtml}
+              </div>
+
+              <button type="submit" class="btn" style="margin-top:10px;"><i class="fa-solid fa-save"></i> Save Content Controls</button>
+            </form>
+          </div>
+        `;
+      }
+    }
+
+    // CRUD Handlers
+    // Product Images Helper functions
+    function adminAddImageUrl() {
+      const urlInput = document.getElementById("prod-image-url");
+      if (!urlInput) return;
+      const url = urlInput.value.trim();
+      if (!url) {
+        showToast("Please enter an image URL.", "error");
+        return;
+      }
+      if (adminUploadedImages.includes(url)) {
+        showToast("This image URL has already been added.", "error");
+        return;
+      }
+      if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("/")) {
+        showToast("Invalid URL format. Must start with http://, https://, or /", "error");
+        return;
+      }
+      
+      adminUploadedImages.push(url);
+      if (!adminPrimaryImage) {
+        adminPrimaryImage = url;
+      }
+      urlInput.value = '';
+      renderUploadedImages();
+      showToast("Image URL added to product draft.", "success");
+    }
+
+    function adminRemoveImage(index) {
+      const removedUrl = adminUploadedImages[index];
+      adminUploadedImages.splice(index, 1);
+      if (adminPrimaryImage === removedUrl) {
+        adminPrimaryImage = adminUploadedImages.length > 0 ? adminUploadedImages[0] : '';
+      }
+      renderUploadedImages();
+    }
+
+    function adminSetPrimaryImage(url) {
+      adminPrimaryImage = url;
+      renderUploadedImages();
+      showToast("Primary image updated.", "success");
+    }
+
+    function adminMoveImage(index, direction) {
+      if (direction === 'left' && index > 0) {
+        const temp = adminUploadedImages[index];
+        adminUploadedImages[index] = adminUploadedImages[index - 1];
+        adminUploadedImages[index - 1] = temp;
+      } else if (direction === 'right' && index < adminUploadedImages.length - 1) {
+        const temp = adminUploadedImages[index];
+        adminUploadedImages[index] = adminUploadedImages[index + 1];
+        adminUploadedImages[index + 1] = temp;
+      }
+      renderUploadedImages();
+    }
+
+    function renderUploadedImages() {
+      const previewContainer = document.getElementById("prod-images-preview");
+      if (!previewContainer) return;
+
+      if (adminUploadedImages.length === 0) {
+        previewContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 13px; padding: 10px 0;">No images added yet. Please add at least one image URL.</div>`;
+        return;
+      }
+
+      let html = '';
+      adminUploadedImages.forEach((url, index) => {
+        const isPrimary = (url === adminPrimaryImage);
+        const isLegacyEmoji = !url.startsWith("http") && !url.startsWith("/");
+
+        let previewHtml = '';
+        if (isLegacyEmoji) {
+          previewHtml = `<div style="font-size: 40px; display: flex; align-items: center; justify-content: center; height: 80px; background: var(--primary-light); border-radius: 4px;">${url}</div>`;
+        } else {
+          previewHtml = `<img src="${url}" onerror="this.onerror=null; this.src='https://placehold.co/150x150?text=Error+Loading';" style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border);">`;
+        }
+
+        html += `
+          <div class="image-preview-card" style="border: 1px solid ${isPrimary ? 'var(--accent)' : 'var(--border)'}; padding: 8px; border-radius: 6px; background: var(--surface-card); position: relative; display: flex; flex-direction: column; gap: 8px;">
+            ${previewHtml}
+            <div style="font-size: 10px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; color: var(--text-muted);" title="${escapeForAttr(url)}">${url}</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+              <button type="button" onclick="adminSetPrimaryImage('${escapeForAttr(url)}')" class="btn" style="padding: 4px 6px; font-size: 11px; background: ${isPrimary ? 'var(--accent)' : 'var(--surface)'}; color: ${isPrimary ? 'white' : 'var(--text-dark)'}; border: 1px solid ${isPrimary ? 'var(--accent)' : 'var(--border)'}; border-radius: 4px; display: flex; gap: 4px; align-items: center;">
+                <i class="fa-solid fa-star" style="color: ${isPrimary ? '#F59E0B' : 'inherit'}"></i> ${isPrimary ? 'Primary' : 'Set Main'}
+              </button>
+              
+              <button type="button" onclick="adminRemoveImage(${index})" class="btn btn-danger" style="padding: 4px 8px; font-size: 11px; border-radius: 4px;" title="Remove Image">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+            
+            <div style="display: flex; gap: 4px; width: 100%;">
+              <button type="button" onclick="adminMoveImage(${index}, 'left')" class="btn btn-secondary" style="flex: 1; padding: 2px 0; font-size: 11px; justify-content: center; border-radius: 4px;" ${index === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button type="button" onclick="adminMoveImage(${index}, 'right')" class="btn btn-secondary" style="flex: 1; padding: 2px 0; font-size: 11px; justify-content: center; border-radius: 4px;" ${index === adminUploadedImages.length - 1 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      previewContainer.innerHTML = html;
+    }
+
+    function adminEditProduct(productId) {
+      adminEditingProductId = productId;
+      
+      const list = DB.get("products") || [];
+      const ep = list.find(p => p.id === productId);
+      if (ep) {
+        adminUploadedImages = Array.isArray(ep.images) ? [...ep.images] : (ep.image ? [ep.image] : []);
+        adminPrimaryImage = ep.primaryImage || ep.image || '';
+      } else {
+        adminUploadedImages = [];
+        adminPrimaryImage = '';
+      }
+
+      renderCurrentSection();
+      const formContainer = document.getElementById("prod-form-container");
+      if (formContainer) formContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function adminCancelEditProduct() {
+      adminEditingProductId = null;
+      adminUploadedImages = [];
+      adminPrimaryImage = '';
+      renderCurrentSection();
+    }
+
+    function adminSaveProduct(e) {
+      e.preventDefault();
+      const nameVal = document.getElementById("prod-name").value.trim();
+      const brandVal = document.getElementById("prod-brand").value.trim() || 'Generic';
+      const categoryVal = document.getElementById("prod-category").value;
+      const priceVal = parseFloat(document.getElementById("prod-price").value) || 0;
+      const originalPriceVal = parseFloat(document.getElementById("prod-original-price").value) || priceVal;
+      const stockVal = parseInt(document.getElementById("prod-stock").value) || 0;
+      const deliveryVal = parseInt(document.getElementById("prod-delivery").value) || 3;
+      const badgeVal = document.getElementById("prod-badge").value || null;
+      const sponsoredVal = document.getElementById("prod-sponsored").checked;
+
+      if (!nameVal) {
+        showToast("Product name is required.", "error");
+        return;
+      }
+
+      if (adminUploadedImages.length === 0) {
+        adminPrimaryImage = '';
+      } else if (!adminPrimaryImage) {
+        adminPrimaryImage = adminUploadedImages[0];
+      }
+
+      const productData = {
+        name: nameVal,
+        brand: brandVal,
+        category: categoryVal,
+        price: priceVal,
+        originalPrice: originalPriceVal,
+        stockCount: stockVal,
+        deliveryDays: deliveryVal,
+        badge: badgeVal,
+        image: adminPrimaryImage || '📦', // Legacy compatibility fallback
+        images: adminUploadedImages,
+        primaryImage: adminPrimaryImage,
+        sponsored: sponsoredVal
+      };
+
+      if (adminEditingProductId) {
+        Products.update(adminEditingProductId, productData);
+        showToast("Product images updated successfully!<br>🔄 Changes are now live on the customer-facing pages.", "success");
+      } else {
+        Products.create(productData);
+        showToast("Product cataloged successfully!<br>🔄 Changes are now live on the customer-facing pages.", "success");
+      }
+
+      adminEditingProductId = null;
+      adminUploadedImages = [];
+      adminPrimaryImage = '';
+      renderCurrentSection();
+    }
+
+    function adminDeleteProduct(productId) {
+      if (!confirm("Are you sure you want to permanently delete this product?")) {
+        return;
+      }
+      const success = Products.delete(productId);
+      if (success) {
+        showToast("Product removed from storefront database.", "success");
+        renderCurrentSection();
+      } else {
+        showToast("Failed to delete product.", "error");
+      }
+    }
+
+    function adminUpdateStock(productId, inputId) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const val = parseInt(input.value);
+      if (isNaN(val) || val < 0) {
+        showToast("Please enter a valid stock level.", "error");
+        return;
+      }
+      
+      Products.update(productId, { stockCount: val });
+      showToast(`Stock updated to ${val} units successfully.`, "success");
+      renderCurrentSection();
+    }
+
+    function adminChangeOrderStatus(orderId, step) {
+      const stepVal = parseInt(step);
+      const allOrders = DB.get("orders");
+      const idx = allOrders.findIndex(o => o.id === orderId);
+      if (idx !== -1) {
+        allOrders[idx].step = stepVal;
+        
+        // Log progression timestamps
+        allOrders[idx].stepDates = allOrders[idx].stepDates || {};
+        allOrders[idx].stepDates[stepVal] = new Date().toLocaleDateString();
+        
+        // Add text logs
+        const logs = [
+          "Order Cancelled", "Order Processing", "Order Placed Successfully",
+          "Order Confirmed & Approved", "Shipped via NexExpress", "Out for Delivery",
+          "Delivered Successfully"
+        ];
+        allOrders[idx].updates = allOrders[idx].updates || [];
+        allOrders[idx].updates.push({
+          title: logs[stepVal] || "Status Update",
+          desc: `Updated by store manager on ${new Date().toLocaleString()}`,
+          date: new Date().toLocaleDateString()
+        });
+
+        // Award points or execute wallet adjustments if refunded/cancelled
+        if (stepVal === 0) {
+          const userEmail = allOrders[idx].userEmail;
+          const users = DB.get("users");
+          const uIdx = users.findIndex(u => u.email.toLowerCase() === userEmail.toLowerCase());
+          if (uIdx !== -1) {
+            const refundAmt = allOrders[idx].price * allOrders[idx].qty;
+            users[uIdx].walletBalance = (users[uIdx].walletBalance || 0) + refundAmt;
+            users[uIdx].walletHistory = users[uIdx].walletHistory || [];
+            users[uIdx].walletHistory.push({
+              type: "Credit",
+              amount: refundAmt,
+              desc: `Instant Refund for Cancelled Order: ${orderId}`,
+              date: new Date().toLocaleDateString()
+            });
+            DB.set("users", users);
+          }
+        }
+
+        DB.set("orders", allOrders);
+        showToast(`Order ID ${orderId} updated to step: ${stepVal}.`, "success");
+        renderCurrentSection();
+      }
+    }
+
+    function adminToggleBlockUser(email) {
+      if (email.toLowerCase() === 'admin@nexcart.com') {
+        showToast("Cannot block system administrator.", "error");
+        return;
+      }
+      const users = DB.get("users");
+      const idx = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+      if (idx !== -1) {
+        users[idx].isBlocked = !users[idx].isBlocked;
+        DB.set("users", users);
+        showToast(users[idx].isBlocked ? "Customer login blocked." : "Customer account unblocked.", "success");
+        renderCurrentSection();
+      }
+    }
+
+    function adminRemoveUser(email) {
+      if (email.toLowerCase() === 'admin@nexcart.com') {
+        showToast("Cannot delete system administrator.", "error");
+        return;
+      }
+      if (!confirm(`Are you sure you want to permanently delete the customer account for ${email}? This action cannot be undone.`)) {
+        return;
+      }
+      const users = DB.get("users");
+      const filtered = users.filter(u => u.email.toLowerCase() !== email.toLowerCase());
+      DB.set("users", filtered);
+    }
+
+    // Verify check state
+    let adminVerifiedUsers = {};
+
+    function adminVerifyUserAuthStatus(emailOrPhone) {
+      const users = DB.get("users");
+      
+      const isMobile = emailOrPhone.startsWith("phone_") || !emailOrPhone.includes("@");
+      
+      if (isMobile) {
+        const phone = emailOrPhone.replace("phone_", "").split("@")[0];
+        const hasMobileUser = users.some(u => u.phone === phone);
+        const isFormatValid = /^[6-9]\d{9}$/.test(phone);
+        
+        if (!isFormatValid) {
+          adminVerifiedUsers[emailOrPhone] = 'invalid';
+        } else if (!hasMobileUser) {
+          adminVerifiedUsers[emailOrPhone] = 'not_found';
+        } else {
+          adminVerifiedUsers[emailOrPhone] = 'verified';
+        }
+      } else {
+        const parts = emailOrPhone.split("@");
+        const local = parts[0];
+        const domain = (parts[1] || "").toLowerCase();
+        
+        const hasUser = users.some(u => u.email && u.email.toLowerCase() === emailOrPhone.toLowerCase());
+        const isFormatValid = domain === "gmail.com" &&
+                              local.length >= 6 &&
+                              local.length <= 30 &&
+                              /^[a-zA-Z0-9._]+$/.test(local) &&
+                              !local.startsWith(".") &&
+                              !local.endsWith(".") &&
+                              !local.includes("..");
+        
+        if (!isFormatValid) {
+          adminVerifiedUsers[emailOrPhone] = 'invalid';
+        } else if (!hasUser) {
+          adminVerifiedUsers[emailOrPhone] = 'not_found';
+        } else {
+          adminVerifiedUsers[emailOrPhone] = 'verified';
+        }
+      }
+      
+      showToast("User status verification ran successfully.", "success");
+      renderCurrentSection();
+    }
+
+    function adminAddWhitelist(e) {
+      e.preventDefault();
+      const input = document.getElementById("whitelist-email-input");
+      if (!input) return;
+      
+      const email = input.value.trim();
+      const parts = email.split("@");
+      if (parts.length !== 2 || parts[1].toLowerCase() !== "gmail.com") {
+        showToast("Please enter a valid Gmail address (@gmail.com).", "error");
+        return;
+      }
+      
+      const local = parts[0];
+      const isFormatValid = local.length >= 6 &&
+                            local.length <= 30 &&
+                            /^[a-zA-Z0-9._]+$/.test(local) &&
+                            !local.startsWith(".") &&
+                            !local.endsWith(".") &&
+                            !local.includes("..");
+                            
+      if (!isFormatValid) {
+        showToast("Gmail format is invalid.", "error");
+        return;
+      }
+      
+      const whitelist = DB.get("whitelist") || [];
+      if (whitelist.map(w => w.toLowerCase()).includes(email.toLowerCase())) {
+        showToast("This Gmail address is already whitelisted.", "error");
+        return;
+      }
+      
+      whitelist.push(email);
+      DB.set("whitelist", whitelist);
+      showToast(`Email ${email} has been whitelisted!`, "success");
+      input.value = "";
+      renderCurrentSection();
+    }
+
+    function adminRemoveWhitelist(email) {
+      if (!confirm(`Are you sure you want to remove ${email} from the whitelist?`)) return;
+      const whitelist = DB.get("whitelist") || [];
+      const filtered = whitelist.filter(w => w.toLowerCase() !== email.toLowerCase());
+      DB.set("whitelist", filtered);
+      showToast("Email removed from whitelist.", "success");
+      renderCurrentSection();
+    }
+
+    function adminSaveContentControls(e) {
+      e.preventDefault();
+      const promoText = document.getElementById("content-promo-text").value.trim();
+      if (promoText) {
+        DB.set("promo_text", promoText);
+      }
+
+      const slides = [];
+      for (let i = 1; i <= 3; i++) {
+        slides.push({
+          class: `slide-${i}`,
+          title: document.getElementById(`slide-${i}-title`).value.trim(),
+          sub: document.getElementById(`slide-${i}-sub`).value.trim(),
+          btnText: document.getElementById(`slide-${i}-btn`).value.trim() || "Shop Now →",
+          emoji: document.getElementById(`slide-${i}-emoji`).value.trim() || "📦",
+          category: document.getElementById(`slide-${i}-cat`).value
+        });
+      }
+
+      DB.set("banners", slides);
+      showToast("Homepage dynamic content customized successfully.", "success");
+      renderCurrentSection();
+    }
+
+    // Page Load Boots
+    window.addEventListener("DOMContentLoaded", () => {
+      checkAuth();
+      renderCurrentSection();
+    });
+
+    // Add storage listener to auto-sync admin panel views in real time
+    window.addEventListener("storage", (e) => {
+      if (e.key === "nc_db_products") {
+        if (activeSection === 'products' || activeSection === 'overview') {
+          renderCurrentSection();
+        }
+      } else if (e.key === "nc_db_orders") {
+        if (activeSection === 'orders' || activeSection === 'overview') {
+          renderCurrentSection();
+        }
+      } else if (e.key === "nc_db_users") {
+        if (activeSection === 'customers') {
+          renderCurrentSection();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
