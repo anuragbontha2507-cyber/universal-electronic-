@@ -7245,12 +7245,12 @@
         if (!product) return "";
         const imageSrc = product.primaryImage || product.image || '';
         if (imageSrc && (imageSrc.startsWith("http") || imageSrc.startsWith("/"))) {
-          return `<img src="${imageSrc}" class="${className}" style="object-fit:cover; width:100%; height:100%; display:block;" onerror="this.onerror=null; this.src='https://placehold.co/150x150?text=Error+Loading';">`;
+          return `<img src="${imageSrc}" class="${className}" loading="lazy" style="object-fit:cover; width:100%; height:100%; display:block;" onerror="this.onerror=null; this.src='https://placehold.co/150x150?text=Error+Loading';">`;
         }
         if (imageSrc) {
           return imageSrc;
         }
-        return `<img src="https://placehold.co/150x150?text=No+Image" class="${className}" style="object-fit:cover; width:100%; height:100%; display:block;">`;
+        return `<img src="https://placehold.co/150x150?text=No+Image" class="${className}" loading="lazy" style="object-fit:cover; width:100%; height:100%; display:block;">`;
       },
 
       init() {
