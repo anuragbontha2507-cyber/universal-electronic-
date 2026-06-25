@@ -3225,22 +3225,26 @@
     html {
       font-size: clamp(13px, 0.35vw + 12px, 17px);
     }
+
     body {
       font-size: 1rem;
       line-height: 1.5;
       overflow-x: hidden !important;
       width: 100% !important;
     }
-    
+
     .slide-title {
       font-size: clamp(1.4rem, 4vw, 3rem) !important;
     }
+
     .slide-subtitle {
       font-size: clamp(0.85rem, 2vw, 1.3rem) !important;
     }
+
     .deals-title {
       font-size: clamp(1.1rem, 2.5vw, 1.7rem) !important;
     }
+
     .product-card .product-title {
       font-size: clamp(0.85rem, 1.2vw, 1.05rem) !important;
     }
@@ -3258,8 +3262,9 @@
       justify-content: space-around;
       align-items: center;
       z-index: 999;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     }
+
     .mobile-bottom-nav-item {
       display: flex;
       flex-direction: column;
@@ -3276,16 +3281,19 @@
       height: 100%;
       gap: 3px;
     }
+
     .mobile-bottom-nav-item.active,
     .mobile-bottom-nav-item:hover {
       color: var(--accent);
     }
+
     .mobile-bottom-nav-item i {
       font-size: 18px;
     }
 
     /* Target minimum 44px for touch elements under tablet viewports */
     @media (max-width: 1023px) {
+
       .top-bar-link,
       .footer-link,
       .cat-pill,
@@ -3301,6 +3309,7 @@
         display: inline-flex;
         align-items: center;
       }
+
       .filter-item input[type="checkbox"],
       .filter-item input[type="radio"] {
         width: 20px;
@@ -3310,6 +3319,7 @@
 
     /* --- BREAKPOINT 1: UHD / 4K (min-width: 2560px) --- */
     @media (min-width: 2560px) {
+
       .container,
       .main-header,
       .cat-nav-container {
@@ -3317,10 +3327,12 @@
         margin-left: auto !important;
         margin-right: auto !important;
       }
+
       .product-grid,
       .skeleton-grid {
         grid-template-columns: repeat(6, 1fr) !important;
       }
+
       .hero-slider {
         height: 500px !important;
       }
@@ -3328,6 +3340,7 @@
 
     /* --- BREAKPOINT 2: Laptop L (min-width: 1440px) and (max-width: 2559px) --- */
     @media (min-width: 1440px) and (max-width: 2559px) {
+
       .container,
       .main-header,
       .cat-nav-container {
@@ -3335,6 +3348,7 @@
         margin-left: auto !important;
         margin-right: auto !important;
       }
+
       .product-grid,
       .skeleton-grid {
         grid-template-columns: repeat(5, 1fr) !important;
@@ -3343,11 +3357,13 @@
 
     /* --- BREAKPOINT 3: Laptop (min-width: 1024px) and (max-width: 1439px) --- */
     @media (min-width: 1024px) and (max-width: 1439px) {
+
       .container,
       .main-header,
       .cat-nav-container {
         max-width: 1200px !important;
       }
+
       .product-grid,
       .skeleton-grid {
         grid-template-columns: repeat(4, 1fr) !important;
@@ -3356,10 +3372,12 @@
 
     /* --- BREAKPOINT 4: Tablet (min-width: 768px) and (max-width: 1023px) --- */
     @media (min-width: 768px) and (max-width: 1023px) {
+
       /* Convert Sidebar to Slide-in Drawer */
       .app-workspace {
         flex-direction: row !important;
       }
+
       .sidebar {
         position: fixed !important;
         top: 0 !important;
@@ -3380,9 +3398,11 @@
         margin: 0 !important;
         align-self: stretch !important;
       }
+
       .sidebar.active {
         left: 0 !important;
       }
+
       .mobile-filter-close {
         display: flex !important;
         align-items: center;
@@ -3396,6 +3416,7 @@
         height: 44px;
         margin-left: auto;
       }
+
       .sidebar-apply-container {
         display: block !important;
         margin-top: auto;
@@ -3405,6 +3426,7 @@
         bottom: 0;
         background: var(--surface-card);
       }
+
       .mobile-filter-btn {
         display: flex !important;
         align-items: center;
@@ -3417,6 +3439,7 @@
         font-size: 13px;
         height: 44px;
       }
+
       .mobile-filter-btn:hover {
         background-color: var(--accent-glow);
       }
@@ -3425,45 +3448,55 @@
       .skeleton-grid {
         grid-template-columns: repeat(3, 1fr) !important;
       }
+
       .hero-slider {
         height: 320px !important;
       }
+
       .location-selector {
         display: none !important;
       }
+
       #settings-toggle-btn i.fa-gear::before {
-        content: "\f0c9" !important; /* fa-bars */
+        content: "\f0c9" !important;
+        /* fa-bars */
       }
     }
 
     /* --- BREAKPOINT 5: Mobile L (min-width: 425px) and (max-width: 767px) --- */
     @media (min-width: 425px) and (max-width: 767px) {
-      html, body {
+
+      body {
         overflow-x: hidden !important;
         width: 100% !important;
-      }
-      body {
         padding-bottom: 60px !important;
       }
+
       .mobile-bottom-nav {
         display: flex !important;
       }
+
       .top-bar {
         padding: 6px 0 !important;
       }
+
       .top-bar-content {
         justify-content: center !important;
       }
-      .top-bar-content > div:first-child {
+
+      .top-bar-content>div:first-child {
         display: none !important;
       }
+
       .top-bar-right {
         justify-content: center !important;
         width: 100% !important;
       }
+
       .top-bar-right span {
         display: none !important;
       }
+
       .top-bar-right span[onclick*="tracker-section"] {
         display: inline-block !important;
       }
@@ -3476,30 +3509,34 @@
         padding: 8px 12px !important;
         gap: 12px !important;
       }
+
       .logo {
         grid-column: 1 !important;
         grid-row: 1 !important;
         font-size: 1.25rem !important;
       }
+
       .search-container {
         grid-column: 2 !important;
         grid-row: 1 !important;
         width: 100% !important;
         margin: 0 !important;
       }
+
       .header-icons {
         grid-column: 3 !important;
         grid-row: 1 !important;
         gap: 8px !important;
       }
+
       .location-selector,
       .theme-toggle,
-      .header-icons > div[onclick*="handleAccountClick"],
-      .header-icons > div[onclick*="toggleSettings"],
-      .header-icons > div[onclick*="toggleWishlistDrawer"] {
+      .header-icons>div[onclick*="handleAccountClick"],
+      .header-icons>div[onclick*="toggleSettings"],
+      .header-icons>div[onclick*="toggleWishlistDrawer"] {
         display: none !important;
       }
-      
+
       .search-dept {
         display: none !important;
       }
@@ -3522,9 +3559,11 @@
         flex-direction: column !important;
         overflow-y: auto !important;
       }
+
       .sidebar.active {
         left: 0 !important;
       }
+
       .mobile-filter-btn {
         display: flex !important;
       }
@@ -3534,7 +3573,7 @@
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 12px !important;
       }
-      
+
       .container,
       .app-workspace {
         padding-left: 12px !important;
@@ -3544,13 +3583,15 @@
       .hero-slider {
         height: 240px !important;
       }
+
       .slide-content {
         padding: 0 20px !important;
       }
+
       .slide-image {
         display: none !important;
       }
-      
+
       .modal-card {
         max-width: 95% !important;
       }
@@ -3558,16 +3599,17 @@
 
     /* --- BREAKPOINT 6: Mobile M (min-width: 375px) and (max-width: 424px) --- */
     @media (min-width: 375px) and (max-width: 424px) {
-      html, body {
+
+      body {
         overflow-x: hidden !important;
         width: 100% !important;
-      }
-      body {
         padding-bottom: 60px !important;
       }
+
       .mobile-bottom-nav {
         display: flex !important;
       }
+
       .top-bar {
         display: none !important;
       }
@@ -3580,16 +3622,19 @@
         padding: 8px 12px !important;
         gap: 8px !important;
       }
+
       .logo {
         grid-column: 1 !important;
         grid-row: 1 !important;
         font-size: 1.2rem !important;
       }
+
       .header-icons {
         grid-column: 2 !important;
         grid-row: 1 !important;
         gap: 8px !important;
       }
+
       .search-container {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -3599,11 +3644,12 @@
 
       .location-selector,
       .theme-toggle,
-      .header-icons > div[onclick*="handleAccountClick"],
-      .header-icons > div[onclick*="toggleSettings"],
-      .header-icons > div[onclick*="toggleWishlistDrawer"] {
+      .header-icons>div[onclick*="handleAccountClick"],
+      .header-icons>div[onclick*="toggleSettings"],
+      .header-icons>div[onclick*="toggleWishlistDrawer"] {
         display: none !important;
       }
+
       .search-dept {
         display: none !important;
       }
@@ -3620,9 +3666,11 @@
         padding: 20px !important;
         transition: left var(--transition-normal) !important;
       }
+
       .sidebar.active {
         left: 0 !important;
       }
+
       .mobile-filter-btn {
         display: flex !important;
       }
@@ -3642,17 +3690,20 @@
       .hero-slider {
         height: 200px !important;
       }
+
       .slide-content {
         padding: 0 12px !important;
       }
+
       .slide-image {
         display: none !important;
       }
-      
+
       .modal-card {
         max-height: 95vh !important;
         border-radius: 12px !important;
       }
+
       .modal-grid {
         grid-template-columns: 1fr !important;
       }
@@ -3660,16 +3711,17 @@
 
     /* --- BREAKPOINT 7: Mobile S (<375px) --- */
     @media (max-width: 374px) {
-      html, body {
+
+      body {
         overflow-x: hidden !important;
         width: 100% !important;
-      }
-      body {
         padding-bottom: 60px !important;
       }
+
       .mobile-bottom-nav {
         display: flex !important;
       }
+
       .top-bar {
         display: none !important;
       }
@@ -3682,16 +3734,19 @@
         padding: 6px 8px !important;
         gap: 6px !important;
       }
+
       .logo {
         grid-column: 1 !important;
         grid-row: 1 !important;
         font-size: 1.05rem !important;
       }
+
       .header-icons {
         grid-column: 2 !important;
         grid-row: 1 !important;
         gap: 6px !important;
       }
+
       .search-container {
         grid-column: 1 / span 2 !important;
         grid-row: 2 !important;
@@ -3701,11 +3756,12 @@
 
       .location-selector,
       .theme-toggle,
-      .header-icons > div[onclick*="handleAccountClick"],
-      .header-icons > div[onclick*="toggleSettings"],
-      .header-icons > div[onclick*="toggleWishlistDrawer"] {
+      .header-icons>div[onclick*="handleAccountClick"],
+      .header-icons>div[onclick*="toggleSettings"],
+      .header-icons>div[onclick*="toggleWishlistDrawer"] {
         display: none !important;
       }
+
       .search-dept {
         display: none !important;
       }
@@ -3721,9 +3777,11 @@
         background-color: var(--surface-card) !important;
         padding: 16px !important;
       }
+
       .sidebar.active {
         left: 0 !important;
       }
+
       .mobile-filter-btn {
         display: flex !important;
       }
@@ -3743,21 +3801,25 @@
       .hero-slider {
         height: 180px !important;
       }
+
       .slide-content {
         padding: 0 8px !important;
       }
+
       .slide-image {
         display: none !important;
       }
+
       .slider-arrow {
         display: none !important;
       }
-      
+
       .modal-card {
         max-height: 100vh !important;
         height: 100vh !important;
         border-radius: 0 !important;
       }
+
       .modal-grid {
         grid-template-columns: 1fr !important;
       }
@@ -4829,6 +4891,23 @@
     .activity-log-table td {
       padding: 10px 12px;
       border-bottom: 1px solid var(--border);
+    }
+
+    /* Mobile Quick Fixes for Sticky Header and Non-overlapping Chat Button */
+    @media (max-width: 767px) {
+      html {
+        overflow-x: visible !important;
+      }
+      body {
+        overflow-x: hidden !important;
+        padding-bottom: 60px !important;
+      }
+      .support-chat-wrapper {
+        bottom: 72px !important;
+      }
+      .scroll-top-btn {
+        bottom: 130px !important;
+      }
     }
   </style>
 </head>
@@ -7265,16 +7344,16 @@
           if (e.key === "nc_db_products") {
             const updatedProducts = JSON.parse(e.newValue || "[]");
             const oldProducts = this.state.products || [];
-            
+
             // Check for additions/deletions
             const oldIds = oldProducts.map(p => p.id);
             const newIds = updatedProducts.map(p => p.id);
             const hasAdded = newIds.some(id => !oldIds.includes(id));
             const hasRemoved = oldIds.some(id => !newIds.includes(id));
-            
+
             // Update state reference
             this.state.products = updatedProducts;
-            
+
             if (hasAdded || hasRemoved) {
               // Full catalog re-render since items list changed
               this.applyAllFiltersAndSort();
@@ -7296,7 +7375,7 @@
               // Sync filtered products list in state in background without full shimmer
               this.sortProducts();
             }
-            
+
             // Sync active details modal if open
             if (this.state.activeModalProductId) {
               const stillExists = updatedProducts.some(p => p.id === this.state.activeModalProductId);
@@ -7306,19 +7385,19 @@
                 this.closeProductModal();
               }
             }
-            
+
             // Sync active search suggestions if open
             const suggestionsBox = document.getElementById("search-suggestions");
             const searchInput = document.getElementById("search-input");
             if (suggestionsBox && suggestionsBox.style.display === "block" && searchInput) {
               this.handleLiveSearch(searchInput.value);
             }
-            
+
             // Sync secondary grids/scrollers
             this.renderDeals();
             this.renderCompareBar();
             this.renderRecentlyViewed();
-            
+
             // Sync cart items with updated product images & details
             let cartChanged = false;
             this.state.cart = this.state.cart.map(item => {
@@ -7408,19 +7487,19 @@
         cards.forEach(card => {
           const imgWrap = card.querySelector('.product-img-wrapper, .deal-img, .recently-viewed-emoji, .drawer-item-emoji, .bought-item-emoji');
           if (!imgWrap) return;
-          
+
           let imgEl = imgWrap.querySelector('img');
           const isUrl = newPrimaryImage && (newPrimaryImage.startsWith("http") || newPrimaryImage.startsWith("/"));
-          
+
           if (isUrl) {
             if (!imgEl) {
               imgWrap.innerHTML = `<img src="" style="object-fit:cover; width:100%; height:100%; display:block; opacity:0; transition:opacity 0.3s ease;">`;
               imgEl = imgWrap.querySelector('img');
             }
-            
+
             imgEl.style.opacity = "0";
             imgEl.style.transition = "opacity 0.3s ease";
-            
+
             const tempImg = new Image();
             tempImg.onload = () => {
               imgEl.src = newPrimaryImage;
@@ -7448,21 +7527,21 @@
         cards.forEach(card => {
           const brandEl = card.querySelector('.product-brand');
           if (brandEl) brandEl.textContent = p.brand;
-          
+
           const nameEl = card.querySelector('.product-name');
           if (nameEl) nameEl.textContent = p.name;
-          
+
           const priceEl = card.querySelector('.current-price');
           if (priceEl) priceEl.textContent = `₹${p.price.toLocaleString()}`;
-          
+
           const mrpEl = card.querySelector('.mrp');
           if (mrpEl) mrpEl.textContent = `₹${p.originalPrice.toLocaleString()}`;
-          
+
           const discountEl = card.querySelector('.discount-label');
           if (discountEl) {
             discountEl.textContent = `${p.discount || Math.round((p.originalPrice - p.price) / p.originalPrice * 100)}% off`;
           }
-          
+
           let stockEl = card.querySelector('.stock-tag');
           if (stockEl) {
             const newStockHtml = p.inStock
@@ -7471,9 +7550,9 @@
             stockEl.textContent = newStockHtml;
             stockEl.className = `stock-tag ${p.inStock ? (p.stockCount <= 5 ? 'stock-low' : 'stock-in') : 'stock-out'}`;
           }
-          
+
           card.classList.toggle('out-of-stock', !p.inStock);
-          
+
           const actionsEl = card.querySelector('.card-actions');
           if (actionsEl) {
             const cartBtn = actionsEl.querySelector('.add-to-cart-btn');
@@ -7863,8 +7942,8 @@
           // Live search query filter
           if (searchQuery) {
             const matchesSearch = p.name.toLowerCase().includes(searchQuery) ||
-                                  p.brand.toLowerCase().includes(searchQuery) ||
-                                  p.category.toLowerCase().includes(searchQuery);
+              p.brand.toLowerCase().includes(searchQuery) ||
+              p.category.toLowerCase().includes(searchQuery);
             if (!matchesSearch) return false;
           }
           // Department check
