@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In — Universal Electronic</title>
+  <title>Sign In — Primecircuit | Universal Electronic</title>
   <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,20 +94,14 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--text-dark);
       cursor: pointer;
       margin-bottom: 24px;
       text-align: center;
     }
 
-    .login-logo span {
-      color: var(--accent);
-    }
-
     .login-logo i {
       color: var(--accent);
+      font-size: 2.2rem;
       animation: pulse 2s infinite;
     }
 
@@ -465,8 +459,16 @@
       <i class="fa-solid fa-arrow-left"></i> Back to Shop
     </a>
 
-    <div class="login-logo" onclick="window.location.href='./'">
-      <i class="fa-solid fa-bolt"></i> Universal<span>Electronic</span>
+    <div class="login-logo" onclick="window.location.href='./'" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <i class="fa-solid fa-bolt"></i>
+      <div style="display: flex; flex-direction: column; text-align: left; line-height: 1.1;">
+        <div style="font-size: 2.0rem; font-weight: 800; color: var(--text-dark);">
+          Prime<span style="color: var(--accent);">circuit</span>
+        </div>
+        <div style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase;">
+          Universal Electronic
+        </div>
+      </div>
     </div>
 
     <!-- Login Card -->
