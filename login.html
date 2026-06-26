@@ -1388,13 +1388,14 @@
         return;
       }
       
-      // 2. Validate Whitelist constraint (if whitelisted is present)
+      // 2. Whitelist constraint check disabled to allow all personal Gmail registrations
+      /*
       const whitelist = DB.get('whitelist') || [];
-      // If whitelist exists and contains entries, we require it
       if (whitelist.length > 0 && !whitelist.map(w => w.toLowerCase()).includes(email.toLowerCase())) {
         showToast("This Gmail is not on the whitelist/approved list. Contact Administrator.");
         return;
       }
+      */
       
       // 3. Check for existing email in user database
       const users = DB.get('users');
