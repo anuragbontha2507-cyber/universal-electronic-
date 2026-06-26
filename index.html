@@ -4189,136 +4189,7 @@
       }
     }
 
-    /* Live Chat Support floating widget */
-    .support-chat-wrapper {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 500;
-      font-family: inherit;
-    }
 
-    .support-chat-bubble-btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background-color: var(--accent);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      box-shadow: var(--shadow-lg);
-      cursor: pointer;
-      transition: transform var(--transition-fast);
-    }
-
-    .support-chat-bubble-btn:hover {
-      transform: scale(1.1);
-      background-color: var(--accent-glow);
-    }
-
-    .support-chat-box {
-      width: 340px;
-      height: 440px;
-      background-color: var(--surface-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: var(--shadow-lg);
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .support-chat-header {
-      background-color: var(--primary);
-      color: white;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .support-chat-agent-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .support-chat-agent-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--accent);
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .support-chat-body {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      background: var(--surface);
-    }
-
-    .chat-msg {
-      max-width: 80%;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .chat-msg.agent {
-      background-color: var(--surface-card);
-      color: var(--text-dark);
-      align-self: flex-start;
-      border-bottom-left-radius: 0;
-      border: 1px solid var(--border);
-    }
-
-    .chat-msg.user {
-      background-color: var(--accent);
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 0;
-    }
-
-    .support-chat-footer {
-      padding: 10px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-      background: var(--surface-card);
-    }
-
-    .support-chat-input {
-      flex: 1;
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 6px;
-      background: var(--surface);
-      color: var(--text-dark);
-      font-size: 13px;
-    }
-
-    .support-chat-send {
-      background: var(--accent);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 600;
-    }
-
-    .support-chat-send:hover {
-      background-color: var(--accent-glow);
-    }
 
     /* CSS Charts representation for Admin dashboard */
     .admin-metrics-row {
@@ -4902,8 +4773,16 @@
         overflow-x: hidden !important;
         padding-bottom: 60px !important;
       }
-      .support-chat-wrapper {
+      .chatbot-toggle-btn {
         bottom: 72px !important;
+        right: 16px !important;
+      }
+      .chatbot-widget {
+        bottom: 138px !important;
+        right: 16px !important;
+        width: calc(100vw - 32px) !important;
+        max-width: 340px !important;
+        height: 400px !important;
       }
       .scroll-top-btn {
         bottom: 130px !important;
@@ -4944,8 +4823,16 @@
       .modal-card {
         max-height: 80vh !important;
       }
-      .support-chat-wrapper {
+      .chatbot-toggle-btn {
         bottom: 66px !important;
+        right: 12px !important;
+      }
+      .chatbot-widget {
+        bottom: 132px !important;
+        right: 12px !important;
+        width: calc(100vw - 24px) !important;
+        max-width: 340px !important;
+        height: 400px !important;
       }
     }
 
@@ -6124,35 +6011,7 @@
     </button>
   </div>
 
-  <!-- FLOATING CHAT WIDGET -->
-  <div class="support-chat-wrapper" id="support-chat-wrapper">
-    <div class="support-chat-bubble-btn" onclick="NexCart.toggleSupportChat(true)">
-      <i class="fa-solid fa-comments"></i>
-    </div>
-    <div class="support-chat-box" id="support-chat-box">
-      <div class="support-chat-header">
-        <div class="support-chat-agent-info">
-          <div class="support-chat-agent-avatar">NC</div>
-          <div>
-            <div style="font-weight:600; font-size:13px;">NexBot Support</div>
-            <div style="font-size:10px; color:#A5B4FC;">Online Agent</div>
-          </div>
-        </div>
-        <button onclick="NexCart.toggleSupportChat(false)" style="color:white; font-size:18px;"><i
-            class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="support-chat-body" id="support-chat-body">
-        <div class="chat-msg agent">Hello! I am NexBot, your virtual assistant. How can I help you today? (Try typing
-          "order", "return", or "cancel")</div>
-      </div>
-      <div class="support-chat-footer">
-        <input type="text" class="support-chat-input" id="support-chat-input" placeholder="Type a message..."
-          onkeypress="if(event.key === 'Enter') NexCart.sendSupportChatMessage()">
-        <button class="support-chat-send" onclick="NexCart.sendSupportChatMessage()"><i
-            class="fa-solid fa-paper-plane"></i></button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- RETURN REQUEST WIZARD MODAL -->
   <div class="modal-overlay" id="return-modal" onclick="if(event.target === this) NexCart.closeReturnModal()">
