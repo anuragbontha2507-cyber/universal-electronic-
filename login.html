@@ -865,6 +865,147 @@
 
     initTheme();
 
+    // ── RATE LIMITER: Max 3 OTP requests per phone per 10 minutes ──
+    const otpRateLimitStore = {};
+
+    function checkOTPRateLimit(phoneNumber) {
+      const now = Date.now();
+      const windowMs = 10 * 60 * 1000;  // 10 minute window
+      const maxRequests = 3;             // max 3 OTPs per 10 minutes
+
+      if (!otpRateLimitStore[phoneNumber]) {
+        otpRateLimitStore[phoneNumber] = { count: 0, windowStart: now };
+      }
+
+      const record = otpRateLimitStore[phoneNumber];
+
+      // Reset window if 10 minutes have passed
+      if (now - record.windowStart > windowMs) {
+        record.count = 0;
+        record.windowStart = now;
+      }
+
+      if (record.count >= maxRequests) {
+        const waitMinutes = Math.ceil((windowMs - (now - record.windowStart)) / 60000);
+        throw {
+          code: "auth/too-many-requests",
+          message: `Too many OTP requests. Please wait ${waitMinutes} minute(s) before trying again.`
+        };
+      }
+
+      record.count++;
+    }
+
+    // ── TWILIO FALLBACK OTP SYSTEM ──────────────────────────────────
+    // Used when Firebase Phone Auth fails for any reason
+
+    // Your Netlify function URL
+    const TWILIO_FUNCTION_URL = "https://primecircuit-backend.netlify.app/.netlify/functions/send-otp";
+
+    // In-memory OTP store — maps phone number to { otp, expiry }
+    // This is safe because it only lives in the current browser session
+    const twilioOtpStore = {};
+
+    // Generate a cryptographically secure 6-digit OTP
+    function generateSecureOTP() {
+      const array = new Uint32Array(1);
+      window.crypto.getRandomValues(array);
+      return String(100000 + (array[0] % 900000));
+    }
+
+    // Send OTP via Twilio through the Netlify serverless function
+    async function sendOTPViaTwilio(phoneNumber) {
+      const otp = generateSecureOTP();
+      const expiry = Date.now() + 5 * 60 * 1000; // OTP valid for 5 minutes
+
+      const response = await fetch(TWILIO_FUNCTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phoneNumber, otp: otp }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Twilio SMS delivery failed.");
+      }
+
+      // Store OTP in memory (never in localStorage — security risk)
+      twilioOtpStore[phoneNumber] = { otp, expiry };
+
+      // Return a confirmationResult-like object matching Firebase's API shape
+      // so the rest of your existing code works without changes
+      return {
+        confirm: async (enteredOtp) => {
+          const record = twilioOtpStore[phoneNumber];
+
+          if (!record) {
+            throw { code: "auth/code-expired", message: "OTP not found. Please request again." };
+          }
+          if (Date.now() > record.expiry) {
+            delete twilioOtpStore[phoneNumber];
+            throw { code: "auth/code-expired", message: "OTP has expired. Please request a new one." };
+          }
+          if (enteredOtp !== record.otp) {
+            throw { code: "auth/invalid-verification-code", message: "Incorrect OTP. Please try again." };
+          }
+
+          // OTP matched — clean up store
+          delete twilioOtpStore[phoneNumber];
+
+          // Look up user by phone key in DB to match Firebase's confirm result shape!
+          const users = DB.get('users');
+          const cleanPhone = phoneNumber.replace("+91", "");
+          const user = users.find(u => u.phone === cleanPhone);
+
+          return { user };
+        }
+      };
+    }
+
+    // ── PRIMARY FUNCTION: Send OTP with automatic fallback ──────────
+    async function sendOTPWithFallback(phoneNumber, recaptchaContainerId) {
+      checkOTPRateLimit(phoneNumber);
+
+      let usedMethod = null;
+
+      // ── TRY FIREBASE FIRST (Primary) ──
+      try {
+        console.log("Attempting OTP via Firebase Phone Auth...");
+
+        const verifier = new FirebaseAuth.RecaptchaVerifier(recaptchaContainerId || "recaptcha-container", { size: "invisible" });
+        const result = await FirebaseAuth.signInWithPhoneNumber("+91" + phoneNumber, verifier);
+
+        usedMethod = "firebase";
+        console.log("OTP sent via Firebase mock ✅");
+        return { confirmationResult: result, method: usedMethod };
+
+      } catch (firebaseError) {
+        console.warn("Firebase OTP failed:", firebaseError.code || firebaseError.message);
+
+        // ── FALL BACK TO TWILIO (Backup) ──
+        console.log("Falling back to Twilio SMS...");
+
+        try {
+          const twilioResult = await sendOTPViaTwilio(phoneNumber);
+          usedMethod = "twilio";
+          console.log("OTP sent via Twilio fallback ✅");
+          return { confirmationResult: twilioResult, method: usedMethod };
+
+        } catch (twilioError) {
+          console.error("Twilio fallback also failed:", twilioError.message);
+
+          // BOTH methods failed — throw a clear combined error
+          throw {
+            code: "auth/both-methods-failed",
+            message: "Unable to send OTP via SMS. Please check your number and internet connection, then try again.",
+            firebaseError,
+            twilioError,
+          };
+        }
+      }
+    }
+
     // Show Toast Notification
     function showToast(message, type = 'error') {
       const container = document.getElementById("toast-container");
@@ -1092,6 +1233,10 @@
       async signInWithPhoneNumber(phoneNumber, verifier) {
         await verifier.verify();
         
+        if (window.mockFirebasePhoneAuthFail || new URLSearchParams(window.location.search).has("firebase_fail")) {
+          throw { code: "auth/too-many-requests", message: "Mocked Firebase failure for testing Twilio fallback" };
+        }
+        
         // Generate random 6 digit OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         
@@ -1268,20 +1413,31 @@
       submitBtn.disabled = true;
       
       try {
-        const verifier = new FirebaseAuth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
-        confirmationResult = await FirebaseAuth.signInWithPhoneNumber("+91" + phoneVal, verifier);
+        const { confirmationResult: result, method } = await sendOTPWithFallback(phoneVal, "recaptcha-container");
+        confirmationResult = result;
         
         submitBtn.innerHTML = origText;
         submitBtn.disabled = false;
+
+        const methodLabel = method === "firebase" ? "Firebase" : "SMS Gateway";
+        showToast(`OTP sent to +91 ${phoneVal.substring(0,2)}XXXXXX${phoneVal.substring(8)} via ${methodLabel}`, "success");
         
         // Go to OTP view and start timer
         document.getElementById("mobile-otp-subtitle").textContent = `Enter the 6-digit OTP sent to +91 ${phoneVal.substring(0,2)}XXXXXX${phoneVal.substring(8)}`;
         switchView('mobile-otp-view');
         startOTPTimer();
-      } catch (err) {
+      } catch (error) {
         submitBtn.innerHTML = origText;
         submitBtn.disabled = false;
-        showToast("Failed to send OTP. Check the number and try again.");
+        if (error.code === "auth/invalid-phone-number") {
+          showToast("Invalid phone number. Please check and try again.");
+        } else if (error.code === "auth/too-many-requests") {
+          showToast(error.message || "Too many OTP requests. Please wait a few minutes.");
+        } else if (error.code === "auth/both-methods-failed") {
+          showToast("Could not send OTP. Check your number and internet connection.");
+        } else {
+          showToast("Failed to send OTP. Please try again.");
+        }
       }
     });
 
@@ -1329,11 +1485,16 @@
       document.getElementById("otp-timer-container").innerHTML = `Resend OTP in <span id="otp-timer-countdown">01:00</span>`;
       startOTPTimer();
       try {
-        const verifier = new FirebaseAuth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
-        confirmationResult = await FirebaseAuth.signInWithPhoneNumber("+91" + mobileLoginNumber, verifier);
-        showToast("OTP resent successfully!", "success");
-      } catch (err) {
-        showToast("Failed to resend OTP. Check connection.");
+        const { confirmationResult: result, method } = await sendOTPWithFallback(mobileLoginNumber, "recaptcha-container");
+        confirmationResult = result;
+        const methodLabel = method === "firebase" ? "Firebase" : "SMS Gateway";
+        showToast(`OTP resent successfully via ${methodLabel}!`, "success");
+      } catch (error) {
+        if (error.code === "auth/too-many-requests") {
+          showToast(error.message, "danger");
+        } else {
+          showToast("Failed to resend OTP. Check connection.");
+        }
       }
     });
 
@@ -1494,18 +1655,17 @@
       submitBtn.disabled = true;
       
       try {
-        const verifier = new FirebaseAuth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
-        signupPhoneConfirmation = await FirebaseAuth.signInWithPhoneNumber("+91" + phoneVal, verifier);
-        
+        const { confirmationResult: result, method } = await sendOTPWithFallback(phoneVal, "recaptcha-container");
+        signupPhoneConfirmation = result;
+        confirmationResult = result;
+        mobileLoginNumber = phoneVal;
+
         submitBtn.innerHTML = origText;
         submitBtn.disabled = false;
-        
-        // We reuse the OTP code view but switch it for registration execution
-        // We set confirmationResult to our registration confirmation object
-        confirmationResult = signupPhoneConfirmation;
-        mobileLoginNumber = phoneVal;
-        
-        // We override the confirm handler temporarily on the form to do registration on success!
+
+        const methodLabel = method === "firebase" ? "Firebase" : "SMS Gateway";
+        showToast(`OTP sent to +91 ${phoneVal.substring(0,2)}XXXXXX${phoneVal.substring(8)} via ${methodLabel}`, "success");
+
         document.getElementById("mobile-otp-subtitle").textContent = `Enter the 6-digit registration OTP sent to +91 ${phoneVal}`;
         switchView('mobile-otp-view');
         startOTPTimer();

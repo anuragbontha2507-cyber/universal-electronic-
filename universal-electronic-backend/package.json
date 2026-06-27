@@ -1,0 +1,8 @@
+{
+  "name": "universal-electronic-backend",
+  "version": "1.0.0",
+  "description": "Twilio OTP backend for Universal Electronic",
+  "dependencies": {
+    "twilio": "^4.23.0"
+  }
+}
