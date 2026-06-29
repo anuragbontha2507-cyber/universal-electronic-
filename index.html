@@ -5015,6 +5015,46 @@
         gap: 12px !important;
       }
     }
+
+    /* Hero slider gradients, white button style, and custom height overrides */
+    .slide-1 {
+      background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%) !important;
+    }
+    .slide-2 {
+      background: linear-gradient(135deg, #115e59 0%, #14532d 100%) !important;
+    }
+    .slide-3 {
+      background: linear-gradient(135deg, #7f1d1d 0%, #7c2d12 100%) !important;
+    }
+    .slide-4 {
+      background: linear-gradient(135deg, #030712 0%, #1e1b4b 100%) !important;
+    }
+    .slide-btn {
+      background: #ffffff !important;
+      color: #0f172a !important;
+      font-weight: 700;
+      padding: 10px 24px;
+      border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      border: none;
+      transition: all var(--transition-fast) !important;
+    }
+    .slide-btn:hover {
+      background: #f1f5f9 !important;
+      color: #0f172a !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+    }
+    @media (max-width: 767px) {
+      .hero-slider {
+        height: 180px !important;
+      }
+    }
+    @media (min-width: 768px) {
+      .hero-slider {
+        height: 280px !important;
+      }
+    }
   </style>
 </head>
 
@@ -6127,6 +6167,56 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
+    // Fetch products from Firebase Firestore
+    async function fetchProductsFromFirestore() {
+      try {
+        let getDocsFn = window.getDocs;
+        let collectionFn = window.collection;
+        let dbObj = window.db;
+
+        if (!dbObj) {
+          console.warn("Firebase db is not initialized. Using local mock database.");
+          return NexCartEngine.DB.get("products");
+        }
+
+        if (!getDocsFn || !collectionFn) {
+          const moduleUrl = "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+          const { collection, getDocs } = await import(moduleUrl);
+          collectionFn = collection;
+          getDocsFn = getDocs;
+        }
+
+        const querySnapshot = await getDocsFn(collectionFn(dbObj, "products"));
+        const productsList = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          productsList.push({
+            id: doc.id,
+            name: data.name || "",
+            brand: data.brand || "",
+            price: parseFloat(data.price) || 0,
+            originalPrice: parseFloat(data.originalPrice) || parseFloat(data.price) || 0,
+            discount: data.discount !== undefined ? parseInt(data.discount) : undefined,
+            rating: parseFloat(data.rating) || 5.0,
+            reviews: parseInt(data.reviewCount) || 0,
+            image: data.image || "📦",
+            category: data.category || "accessories",
+            inStock: data.stock !== undefined ? (parseInt(data.stock) > 0) : true,
+            stockCount: data.stock !== undefined ? parseInt(data.stock) : 10,
+            badge: data.badge || null,
+            deliveryDays: data.deliveryDays !== undefined ? parseInt(data.deliveryDays) : 3,
+            sponsored: !!data.sponsored,
+            images: data.images || (data.image ? [data.image] : []),
+            primaryImage: data.primaryImage || data.image || ""
+          });
+        });
+        return productsList;
+      } catch (error) {
+        console.error("Error fetching products from Firestore:", error);
+        return NexCartEngine.DB.get("products");
+      }
+    }
+
     // Categories matching requirements
     const CATEGORIES = [
       { id: "all", label: "All", emoji: "📦" },
@@ -7573,6 +7663,17 @@
             }
           }
         }, 60000);
+
+        // Fetch products from Firebase Firestore asynchronously in background
+        fetchProductsFromFirestore().then(firestoreProducts => {
+          if (firestoreProducts && firestoreProducts.length > 0) {
+            this.state.products = firestoreProducts;
+            this.state.filteredProducts = [...firestoreProducts];
+            this.applyAllFiltersAndSort();
+          }
+        }).catch(err => {
+          console.error("Failed to load products from Firestore", err);
+        });
       },
 
       updateProductImageOnPage(productId, newPrimaryImage, allImages) {
@@ -8123,7 +8224,17 @@
         const list = this.state.filteredProducts;
 
         // Results count text
-        document.getElementById("results-count").textContent = `Showing 1–${list.length} of ${list.length} results`;
+        document.getElementById("results-count").textContent = `Showing ${list.length} results`;
+
+        if (this.state.products.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px; background: var(--surface-card); border-radius: 12px; border: 1px solid var(--border);">
+              <i class="fa-solid fa-circle-info" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+              <h3>No products found. Check back soon!</h3>
+            </div>
+          `;
+          return;
+        }
 
         if (list.length === 0) {
           container.innerHTML = `
@@ -8244,33 +8355,42 @@
       initHeroSlider() {
         const slider = document.getElementById("hero-slider");
         let slides = NexCartEngine.DB.get('banners');
-        if (!slides || slides.length === 0) {
+        if (!slides || slides.length < 4) {
           slides = [
             {
               class: "slide-1",
-              title: "Up to 40% off on Flagship Phones",
-              sub: "Limited time — Shop Samsung, Apple, OnePlus, Google",
-              btnText: "Shop Now →",
+              title: "🔥 Summer Sale — Up to 60% Off on Smartphones",
+              sub: "Limited time offer on all top smartphone brands",
+              btnText: "Shop Now",
               emoji: "📱",
               category: "smartphones"
             },
             {
               class: "slide-2",
-              title: "Premium Laptops. Unmatched Performance.",
-              sub: "Dell XPS, Lenovo ThinkPad, MacBook M3 on sale",
-              btnText: "Explore Laptops →",
+              title: "🎧 Premium Audio — Earbuds & Headphones Starting ₹999",
+              sub: "Experience immersive sound with active noise cancellation",
+              btnText: "Shop Now",
+              emoji: "🎧",
+              category: "audio"
+            },
+            {
+              class: "slide-3",
+              title: "💻 Laptop Fest — Top Brands, Best Prices",
+              sub: "Level up your productivity with latest Intel & AMD laptops",
+              btnText: "Shop Now",
               emoji: "💻",
               category: "laptops"
             },
             {
-              class: "slide-3",
-              title: "Gaming Gear That Wins",
-              sub: "High-spec Monitors, Controllers, and Headsets",
-              btnText: "Shop Gaming →",
-              emoji: "🎮",
-              category: "gaming"
+              class: "slide-4",
+              title: "⚡ Flash Deal — Limited Stock, Grab Now!",
+              sub: "Unbeatable discounts on best-selling electronics",
+              btnText: "Shop Now",
+              emoji: "⚡",
+              category: "all"
             }
           ];
+          NexCartEngine.DB.set('banners', slides);
         }
 
         // Clean up existing slides and dots to support hot reloading/updating
@@ -8368,21 +8488,31 @@
       },
 
       initDealsTimer() {
-        let totalSec = 24 * 60 * 60; // 24 hours
         const label = document.getElementById("countdown-time");
 
-        setInterval(() => {
-          totalSec--;
-          if (totalSec <= 0) totalSec = 24 * 60 * 60; // reset
+        const updateTimer = () => {
+          const now = new Date();
+          const target = new Date();
+          target.setHours(23, 59, 59, 999);
 
-          const hrs = Math.floor(totalSec / 3600);
-          const mins = Math.floor((totalSec % 3600) / 60);
-          const secs = totalSec % 60;
+          let diffMs = target.getTime() - now.getTime();
+          if (diffMs <= 0) {
+            target.setDate(target.getDate() + 1);
+            diffMs = target.getTime() - now.getTime();
+          }
+
+          const diffSec = Math.max(0, Math.floor(diffMs / 1000));
+          const hrs = Math.floor(diffSec / 3600);
+          const mins = Math.floor((diffSec % 3600) / 60);
+          const secs = diffSec % 60;
 
           if (label) {
             label.textContent = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
           }
-        }, 1000);
+        };
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
 
         this.renderDeals();
       },
@@ -12024,12 +12154,12 @@
         }
 
         const slides = [];
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 4; i++) {
           slides.push({
             class: `slide-${i}`,
             title: document.getElementById(`slide-${i}-title`).value.trim(),
             sub: document.getElementById(`slide-${i}-sub`).value.trim(),
-            btnText: document.getElementById(`slide-${i}-btn`).value.trim() || "Shop Now →",
+            btnText: document.getElementById(`slide-${i}-btn`).value.trim() || "Shop Now",
             emoji: document.getElementById(`slide-${i}-emoji`).value.trim() || "📦",
             category: document.getElementById(`slide-${i}-cat`).value
           });
@@ -12397,9 +12527,10 @@
           let banners = NexCartEngine.DB.get("banners") || [];
           if (banners.length === 0) {
             banners = [
-              { class: "slide-1", title: "Up to 40% off on Flagship Phones", sub: "Limited time — Shop Samsung, Apple, OnePlus, Google", btnText: "Shop Now →", emoji: "📱", category: "smartphones" },
-              { class: "slide-2", title: "Premium Laptops. Unmatched Performance.", sub: "Dell XPS, Lenovo ThinkPad, MacBook M3 on sale", btnText: "Explore Laptops →", emoji: "💻", category: "laptops" },
-              { class: "slide-3", title: "Gaming Gear That Wins", sub: "High-spec Monitors, Controllers, and Headsets", btnText: "Shop Gaming →", emoji: "🎮", category: "gaming" }
+              { class: "slide-1", title: "🔥 Summer Sale — Up to 60% Off on Smartphones", sub: "Limited time offer on all top smartphone brands", btnText: "Shop Now", emoji: "📱", category: "smartphones" },
+              { class: "slide-2", title: "🎧 Premium Audio — Earbuds & Headphones Starting ₹999", sub: "Experience immersive sound with active noise cancellation", btnText: "Shop Now", emoji: "🎧", category: "audio" },
+              { class: "slide-3", title: "💻 Laptop Fest — Top Brands, Best Prices", sub: "Level up your productivity with latest Intel & AMD laptops", btnText: "Shop Now", emoji: "💻", category: "laptops" },
+              { class: "slide-4", title: "⚡ Flash Deal — Limited Stock, Grab Now!", sub: "Unbeatable discounts on best-selling electronics", btnText: "Shop Now", emoji: "⚡", category: "all" }
             ];
           }
 

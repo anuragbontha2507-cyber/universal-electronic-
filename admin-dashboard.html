@@ -1058,9 +1058,10 @@
         let banners = DB.get("banners") || [];
         if (banners.length === 0) {
           banners = [
-            { class: "slide-1", title: "Up to 40% off on Flagship Phones", sub: "Limited time — Shop Samsung, Apple, OnePlus, Google", btnText: "Shop Now →", emoji: "📱", category: "smartphones" },
-            { class: "slide-2", title: "Premium Laptops. Unmatched Performance.", sub: "Dell XPS, Lenovo ThinkPad, MacBook M3 on sale", btnText: "Explore Laptops →", emoji: "💻", category: "laptops" },
-            { class: "slide-3", title: "Gaming Gear That Wins", sub: "High-spec Monitors, Controllers, and Headsets", btnText: "Shop Gaming →", emoji: "🎮", category: "gaming" }
+            { class: "slide-1", title: "🔥 Summer Sale — Up to 60% Off on Smartphones", sub: "Limited time offer on all top smartphone brands", btnText: "Shop Now", emoji: "📱", category: "smartphones" },
+            { class: "slide-2", title: "🎧 Premium Audio — Earbuds & Headphones Starting ₹999", sub: "Experience immersive sound with active noise cancellation", btnText: "Shop Now", emoji: "🎧", category: "audio" },
+            { class: "slide-3", title: "💻 Laptop Fest — Top Brands, Best Prices", sub: "Level up your productivity with latest Intel & AMD laptops", btnText: "Shop Now", emoji: "💻", category: "laptops" },
+            { class: "slide-4", title: "⚡ Flash Deal — Limited Stock, Grab Now!", sub: "Unbeatable discounts on best-selling electronics", btnText: "Shop Now", emoji: "⚡", category: "all" }
           ];
         }
 
@@ -1522,12 +1523,12 @@
       }
 
       const slides = [];
-      for (let i = 1; i <= 3; i++) {
+      for (let i = 1; i <= 4; i++) {
         slides.push({
           class: `slide-${i}`,
           title: document.getElementById(`slide-${i}-title`).value.trim(),
           sub: document.getElementById(`slide-${i}-sub`).value.trim(),
-          btnText: document.getElementById(`slide-${i}-btn`).value.trim() || "Shop Now →",
+          btnText: document.getElementById(`slide-${i}-btn`).value.trim() || "Shop Now",
           emoji: document.getElementById(`slide-${i}-emoji`).value.trim() || "📦",
           category: document.getElementById(`slide-${i}-cat`).value
         });
