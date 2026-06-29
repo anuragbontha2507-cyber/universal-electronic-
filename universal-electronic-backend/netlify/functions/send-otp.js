@@ -75,7 +75,7 @@ exports.handler = async function (event, context) {
 
     // Send SMS
     const message = await client.messages.create({
-      body: `Your Primecircuit OTP is: ${otp}. Valid for 5 minutes. Do not share this with anyone.`,
+      body: `Your voltiQ OTP is: ${otp}. Valid for 5 minutes. Do not share this with anyone.`,
       from: fromNumber,
       to: "+91" + phone,
     });
