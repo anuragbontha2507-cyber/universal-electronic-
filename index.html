@@ -7663,17 +7663,6 @@
             }
           }
         }, 60000);
-
-        // Fetch products from Firebase Firestore asynchronously in background
-        fetchProductsFromFirestore().then(firestoreProducts => {
-          if (firestoreProducts && firestoreProducts.length > 0) {
-            this.state.products = firestoreProducts;
-            this.state.filteredProducts = [...firestoreProducts];
-            this.applyAllFiltersAndSort();
-          }
-        }).catch(err => {
-          console.error("Failed to load products from Firestore", err);
-        });
       },
 
       updateProductImageOnPage(productId, newPrimaryImage, allImages) {
@@ -8224,17 +8213,7 @@
         const list = this.state.filteredProducts;
 
         // Results count text
-        document.getElementById("results-count").textContent = `Showing ${list.length} results`;
-
-        if (this.state.products.length === 0) {
-          container.innerHTML = `
-            <div style="text-align: center; padding: 48px; background: var(--surface-card); border-radius: 12px; border: 1px solid var(--border);">
-              <i class="fa-solid fa-circle-info" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
-              <h3>No products found. Check back soon!</h3>
-            </div>
-          `;
-          return;
-        }
+        document.getElementById("results-count").textContent = `Showing 1–${list.length} of ${list.length} results`;
 
         if (list.length === 0) {
           container.innerHTML = `
@@ -8488,31 +8467,21 @@
       },
 
       initDealsTimer() {
+        let totalSec = 24 * 60 * 60; // 24 hours
         const label = document.getElementById("countdown-time");
 
-        const updateTimer = () => {
-          const now = new Date();
-          const target = new Date();
-          target.setHours(23, 59, 59, 999);
+        setInterval(() => {
+          totalSec--;
+          if (totalSec <= 0) totalSec = 24 * 60 * 60; // reset
 
-          let diffMs = target.getTime() - now.getTime();
-          if (diffMs <= 0) {
-            target.setDate(target.getDate() + 1);
-            diffMs = target.getTime() - now.getTime();
-          }
-
-          const diffSec = Math.max(0, Math.floor(diffMs / 1000));
-          const hrs = Math.floor(diffSec / 3600);
-          const mins = Math.floor((diffSec % 3600) / 60);
-          const secs = diffSec % 60;
+          const hrs = Math.floor(totalSec / 3600);
+          const mins = Math.floor((totalSec % 3600) / 60);
+          const secs = totalSec % 60;
 
           if (label) {
             label.textContent = `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
           }
-        };
-
-        updateTimer();
-        setInterval(updateTimer, 1000);
+        }, 1000);
 
         this.renderDeals();
       },
