@@ -6915,7 +6915,7 @@
           const total = subtotal - discount + gst + shippingCost;
 
           // Handle Wallet Deduction
-          if (paymentMethod === 'Wallet') {
+          if (paymentMethod === 'WALLET') {
             if (!user || user.walletBalance < total) {
               return { success: false, message: 'Your wallet has insufficient balance.' };
             }
@@ -9255,10 +9255,41 @@
 
       /* STEP-BASED CHECKOUT FLOW */
       openCheckoutFlow() {
+        if (!this.state.user) {
+          this.showToast("Please log in to proceed to checkout", "warning");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1200);
+          return;
+        }
         if (this.state.cart.length === 0) {
           this.showToast("Your cart is empty!", "warning");
           return;
         }
+        
+        // Auto-fill address fields from logged-in user profile if available
+        const nameEl = document.getElementById("chk-name");
+        const phoneEl = document.getElementById("chk-phone");
+        if (nameEl && this.state.user.name) nameEl.value = this.state.user.name;
+        if (phoneEl && this.state.user.phone) phoneEl.value = this.state.user.phone;
+
+        // Try to load user's default saved address if any
+        const savedAddresses = NexCartEngine.DB.get("addresses") || [];
+        const defaultAddr = savedAddresses.find(a => a.userEmail.toLowerCase() === this.state.user.email.toLowerCase() && a.isDefault);
+        if (defaultAddr) {
+          const addr1El = document.getElementById("chk-addr1");
+          const addr2El = document.getElementById("chk-addr2");
+          const pinEl = document.getElementById("chk-pincode");
+          const cityEl = document.getElementById("chk-city");
+          const stateEl = document.getElementById("chk-state");
+          
+          if (addr1El) addr1El.value = defaultAddr.addr1 || "";
+          if (addr2El) addr2El.value = defaultAddr.addr2 || "";
+          if (pinEl) pinEl.value = defaultAddr.pincode || "";
+          if (cityEl) cityEl.value = defaultAddr.city || "";
+          if (stateEl) stateEl.value = defaultAddr.state || "";
+        }
+
         this.toggleCartDrawer(false);
         this.state.checkoutStep = 1;
         this.renderCheckoutStep();
